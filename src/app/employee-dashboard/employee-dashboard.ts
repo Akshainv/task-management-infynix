@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { EmployeeSidebarComponent } from '../employee-sidebar/employee-sidebar';
 
-
 interface SummaryCard {
   title: string;
   value: number;
@@ -64,12 +63,15 @@ export class EmployeeDashboardComponent implements OnInit {
   selectedFile: File | null = null;
   photoPreview: string | null = null;
   showCamera: boolean = false;
+  videoStream: MediaStream | null = null;
+  showCameraModal: boolean = false;
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
-    this.checkTodayAttendance();
+    // Note: Attendance state is now maintained in memory only
+    // Data will reset on page refresh (this is expected behavior without localStorage)
   }
 
   loadDashboardData(): void {
@@ -83,24 +85,34 @@ export class EmployeeDashboardComponent implements OnInit {
     }
   }
 
-  checkTodayAttendance(): void {
-    // Check if already checked in today
-    const storedAttendance = localStorage.getItem('todayAttendance');
-    if (storedAttendance) {
-      this.attendanceStatus = JSON.parse(storedAttendance);
-    }
-  }
-
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.selectedFile = input.files[0];
+
+      // Validate file type
+      if (!this.selectedFile.type.startsWith('image/')) {
+        alert('Please select a valid image file');
+        this.selectedFile = null;
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (this.selectedFile.size > 5 * 1024 * 1024) {
+        alert('Image size should not exceed 5MB');
+        this.selectedFile = null;
+        return;
+      }
 
       // Create preview
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         this.photoPreview = e.target?.result as string;
         this.attendanceStatus.photoUploaded = true;
+      };
+      reader.onerror = () => {
+        alert('Error reading file. Please try again.');
+        this.selectedFile = null;
       };
       reader.readAsDataURL(this.selectedFile);
     }
@@ -113,10 +125,68 @@ export class EmployeeDashboardComponent implements OnInit {
     }
   }
 
-  openCamera(): void {
-    this.showCamera = true;
-    // Implement camera logic here using navigator.mediaDevices.getUserMedia
-    console.log('Camera opened');
+  async openCamera(): Promise<void> {
+    this.showCameraModal = true;
+    
+    try {
+      // Request camera access
+      this.videoStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'user',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
+      });
+      
+      // Wait for DOM to update
+      setTimeout(() => {
+        const videoElement = document.getElementById('cameraVideo') as HTMLVideoElement;
+        if (videoElement && this.videoStream) {
+          videoElement.srcObject = this.videoStream;
+          videoElement.play();
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Camera access error:', error);
+      alert('Unable to access camera. Please check permissions or use file upload instead.');
+      this.closeCamera();
+    }
+  }
+
+  capturePhoto(): void {
+    const videoElement = document.getElementById('cameraVideo') as HTMLVideoElement;
+    const canvas = document.createElement('canvas');
+    
+    if (videoElement) {
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(videoElement, 0, 0);
+        
+        // Convert canvas to blob and then to data URL
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              this.photoPreview = e.target?.result as string;
+              this.attendanceStatus.photoUploaded = true;
+              this.closeCamera();
+            };
+            reader.readAsDataURL(blob);
+          }
+        }, 'image/jpeg', 0.9);
+      }
+    }
+  }
+
+  closeCamera(): void {
+    if (this.videoStream) {
+      this.videoStream.getTracks().forEach(track => track.stop());
+      this.videoStream = null;
+    }
+    this.showCameraModal = false;
   }
 
   checkIn(): void {
@@ -129,11 +199,9 @@ export class EmployeeDashboardComponent implements OnInit {
     this.attendanceStatus.isCheckedIn = true;
     this.attendanceStatus.checkInTime = now.toLocaleTimeString('en-US', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: true
     });
-
-    // Save to localStorage
-    localStorage.setItem('todayAttendance', JSON.stringify(this.attendanceStatus));
 
     console.log('Checked in at:', this.attendanceStatus.checkInTime);
   }
@@ -147,16 +215,24 @@ export class EmployeeDashboardComponent implements OnInit {
     const now = new Date();
     this.attendanceStatus.checkOutTime = now.toLocaleTimeString('en-US', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: true
     });
-
-    // Save to localStorage
-    localStorage.setItem('todayAttendance', JSON.stringify(this.attendanceStatus));
 
     console.log('Checked out at:', this.attendanceStatus.checkOutTime);
   }
 
   removePhoto(): void {
+    if (this.attendanceStatus.isCheckedIn) {
+      if (!confirm('Removing photo will reset your attendance. Continue?')) {
+        return;
+      }
+      // Reset attendance if photo is removed after check-in
+      this.attendanceStatus.isCheckedIn = false;
+      this.attendanceStatus.checkInTime = null;
+      this.attendanceStatus.checkOutTime = null;
+    }
+    
     this.selectedFile = null;
     this.photoPreview = null;
     this.attendanceStatus.photoUploaded = false;
@@ -180,5 +256,10 @@ export class EmployeeDashboardComponent implements OnInit {
     } else {
       return 'status-not-checked-in';
     }
+  }
+
+  ngOnDestroy(): void {
+    // Clean up camera stream if component is destroyed
+    this.closeCamera();
   }
 }

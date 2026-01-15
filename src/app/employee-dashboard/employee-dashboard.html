@@ -10,7 +10,7 @@
         <div *ngFor="let card of summaryCards" class="summary-card" [style.background]="card.bgColor"
           (click)="onCardClick(card.route)" [style.cursor]="card.route ? 'pointer' : 'default'">
 
-          <div class="summary-card::before"></div>
+          <div class="summary-card-glow"></div>
 
           <div class="card-content">
             <div class="card-icon" [style.background]="card.iconBg">
@@ -90,7 +90,7 @@
             <div class="photo-preview-area" *ngIf="photoPreview">
               <div class="preview-container">
                 <img [src]="photoPreview" alt="Attendance Photo" class="preview-image">
-                <button type="button" class="remove-photo-btn" (click)="removePhoto()">
+                <button type="button" class="remove-photo-btn" (click)="removePhoto()" title="Remove photo">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
@@ -104,13 +104,17 @@
           <!-- Action Buttons -->
           <div class="action-buttons">
             <button type="button" class="check-in-btn"
-              [disabled]="attendanceStatus.isCheckedIn || !attendanceStatus.photoUploaded" (click)="checkIn()">
+              [disabled]="attendanceStatus.isCheckedIn || !attendanceStatus.photoUploaded" 
+              (click)="checkIn()"
+              [title]="!attendanceStatus.photoUploaded ? 'Please upload photo first' : (attendanceStatus.isCheckedIn ? 'Already checked in' : 'Click to check in')">
               <i class="fas fa-sign-in-alt"></i>
               <span>CHECK IN</span>
             </button>
 
             <button type="button" class="check-out-btn"
-              [disabled]="!attendanceStatus.isCheckedIn || attendanceStatus.checkOutTime" (click)="checkOut()">
+              [disabled]="!attendanceStatus.isCheckedIn || attendanceStatus.checkOutTime" 
+              (click)="checkOut()"
+              [title]="!attendanceStatus.isCheckedIn ? 'Check in first' : (attendanceStatus.checkOutTime ? 'Already checked out' : 'Click to check out')">
               <i class="fas fa-sign-out-alt"></i>
               <span>CHECK OUT</span>
             </button>
@@ -119,8 +123,7 @@
           <!-- Status Message -->
           <div class="status-message">
             <i class="fas fa-exclamation-circle"></i>
-            <span>Photo verification required when checking in • Current Status: <strong>{{ getCurrentStatus()
-                }}</strong></span>
+            <span>Photo verification required when checking in • Current Status: <strong>{{ getCurrentStatus() }}</strong></span>
           </div>
 
           <!-- Attendance Times Display -->
@@ -145,5 +148,34 @@
       </div>
     </section>
 
+  </div>
+</div>
+
+<!-- Camera Modal -->
+<div class="camera-modal" *ngIf="showCameraModal">
+  <div class="camera-modal-overlay" (click)="closeCamera()"></div>
+  <div class="camera-modal-content">
+    <div class="camera-modal-header">
+      <h3>
+        <i class="fas fa-camera"></i>
+        Take Your Photo
+      </h3>
+      <button type="button" class="close-modal-btn" (click)="closeCamera()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="camera-modal-body">
+      <video id="cameraVideo" autoplay playsinline></video>
+    </div>
+    <div class="camera-modal-footer">
+      <button type="button" class="capture-btn" (click)="capturePhoto()">
+        <i class="fas fa-camera"></i>
+        Capture Photo
+      </button>
+      <button type="button" class="cancel-btn" (click)="closeCamera()">
+        <i class="fas fa-times"></i>
+        Cancel
+      </button>
+    </div>
   </div>
 </div>

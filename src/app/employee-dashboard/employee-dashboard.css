@@ -17,7 +17,7 @@
   width: calc(100% - 280px);
 }
 
-:host ::ng-deep .sidebar.collapsed~.main-content {
+:host ::ng-deep .sidebar.collapsed ~ .main-content {
   margin-left: 80px;
   width: calc(100% - 80px);
 }
@@ -58,7 +58,7 @@
   cursor: pointer;
 }
 
-.summary-card::before {
+.summary-card-glow {
   content: '';
   position: absolute;
   top: 0;
@@ -191,12 +191,9 @@
 }
 
 @keyframes pulse {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
   }
-
   50% {
     transform: scale(1.05);
   }
@@ -226,12 +223,9 @@
 }
 
 @keyframes blink {
-
-  0%,
-  100% {
+  0%, 100% {
     opacity: 1;
   }
-
   50% {
     opacity: 0.4;
   }
@@ -506,6 +500,7 @@
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .status-message i {
@@ -583,6 +578,155 @@
   font-weight: 700;
   color: #1F2937;
   letter-spacing: -0.3px;
+}
+
+/* ============================================
+   CAMERA MODAL
+   ============================================ */
+.camera-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.camera-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.camera-modal-content {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.camera-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #FAFBFC 0%, #F9FAFB 100%);
+}
+
+.camera-modal-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0;
+}
+
+.camera-modal-header h3 i {
+  color: #F97316;
+}
+
+.close-modal-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  color: #6B7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-modal-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+  transform: rotate(90deg);
+}
+
+.camera-modal-body {
+  padding: 0;
+  background: #000;
+}
+
+.camera-modal-body video {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  display: block;
+  object-fit: cover;
+}
+
+.camera-modal-footer {
+  padding: 20px 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  background: linear-gradient(135deg, #FAFBFC 0%, #F9FAFB 100%);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.capture-btn,
+.cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.capture-btn {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: white;
+}
+
+.capture-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #E5E7EB 0%, #D1D5DB 100%);
+  color: #6B7280;
+}
+
+.cancel-btn:hover {
+  background: linear-gradient(135deg, #D1D5DB 0%, #9CA3AF 100%);
+  color: #1F2937;
+  transform: translateY(-2px);
 }
 
 /* ============================================
@@ -671,6 +815,10 @@
     width: 100%;
     justify-content: center;
   }
+
+  .camera-modal-content {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -703,6 +851,11 @@
   .time-value {
     font-size: 16px;
   }
+
+  .status-message {
+    font-size: 12px;
+    padding: 10px 16px;
+  }
 }
 
 /* ============================================
@@ -714,7 +867,6 @@
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
