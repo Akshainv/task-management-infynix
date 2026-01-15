@@ -97,39 +97,71 @@ export class AdminEmployeeComponent {
   }
 
   // ── Form Actions ───────────────────────────────────────
+  // Edit state
+  isEditing = false;
+  editingId: number | null = null;
+
+  // ── Form Actions ───────────────────────────────────────
   createEmployee() {
     if (this.isFormValid()) {
-      const employee: Employee = {
-        id: this.employees.length + 1,
-        name: this.newEmployee.name.trim(),
-        email: this.newEmployee.email.trim(),
-        contactNumber: this.newEmployee.contactNumber.trim()
-      };
+      if (this.isEditing && this.editingId !== null) {
+        // Update existing employee
+        const index = this.employees.findIndex(e => e.id === this.editingId);
+        if (index !== -1) {
+          this.employees[index] = {
+            id: this.editingId,
+            name: this.newEmployee.name.trim(),
+            email: this.newEmployee.email.trim(),
+            contactNumber: this.newEmployee.contactNumber.trim()
+          };
+          alert('Employee updated successfully!');
+        }
+      } else {
+        // Create new employee
+        const employee: Employee = {
+          id: this.employees.length + 1,
+          name: this.newEmployee.name.trim(),
+          email: this.newEmployee.email.trim(),
+          contactNumber: this.newEmployee.contactNumber.trim()
+        };
+        this.employees.push(employee);
+        alert('Employee created successfully!');
+        // Navigate to last page to see the new employee
+        this.currentPage = this.totalPages;
+      }
 
-      this.employees.push(employee);
       this.resetForm();
-      alert('Employee created successfully!');
-      
-      // Navigate to last page to see the new employee
-      this.currentPage = this.totalPages;
     } else {
       alert('Please fill all required fields');
     }
   }
 
   editEmployee(employee: Employee) {
-    alert(`Edit functionality for ${employee.name} - Coming soon!`);
+    this.isEditing = true;
+    this.editingId = employee.id;
+    this.newEmployee = {
+      name: employee.name,
+      email: employee.email,
+      password: '', // Password not stored in list
+      contactNumber: employee.contactNumber
+    };
+
+    // Scroll to form
+    const formElement = document.querySelector('.employee-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   deleteEmployee(id: number) {
     if (confirm('Are you sure you want to delete this employee?')) {
       this.employees = this.employees.filter(e => e.id !== id);
-      
+
       // Adjust current page if necessary after deletion
       if (this.paginatedEmployees.length === 0 && this.currentPage > 1) {
         this.currentPage--;
       }
-      
+
       alert('Employee deleted successfully!');
     }
   }
@@ -145,5 +177,7 @@ export class AdminEmployeeComponent {
 
   resetForm() {
     this.newEmployee = { name: '', email: '', password: '', contactNumber: '' };
+    this.isEditing = false;
+    this.editingId = null;
   }
 }

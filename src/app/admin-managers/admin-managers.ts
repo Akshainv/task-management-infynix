@@ -99,45 +99,81 @@ export class AdminManagersComponent {
   }
 
   // ── Form Actions ───────────────────────────────────────
+  // Edit state
+  isEditing = false;
+  editingId: number | null = null;
+
+  // ── Form Actions ───────────────────────────────────────
   createManager() {
     if (this.isFormValid()) {
-      const manager: Manager = {
-        id: this.managers.length + 1,
-        name: this.newManager.name.trim(),
-        email: this.newManager.email.trim(),
-        company: this.newManager.company.trim(),
-        contactNumber: this.newManager.contactNumber.trim()
-      };
+      if (this.isEditing && this.editingId !== null) {
+        // Update existing manager
+        const index = this.managers.findIndex(m => m.id === this.editingId);
+        if (index !== -1) {
+          this.managers[index] = {
+            id: this.editingId,
+            name: this.newManager.name.trim(),
+            email: this.newManager.email.trim(),
+            company: this.newManager.company.trim(),
+            contactNumber: this.newManager.contactNumber.trim()
+          };
+          alert('Manager updated successfully!');
+        }
+      } else {
+        // Create new manager
+        const manager: Manager = {
+          id: this.managers.length + 1,
+          name: this.newManager.name.trim(),
+          email: this.newManager.email.trim(),
+          company: this.newManager.company.trim(),
+          contactNumber: this.newManager.contactNumber.trim()
+        };
+        this.managers.push(manager);
+        alert('Manager created successfully!');
+        // Navigate to last page to see the new manager
+        this.currentPage = this.totalPages;
+      }
 
-      this.managers.push(manager);
       this.resetForm();
-      alert('Manager created successfully!');
-      
-      // Navigate to last page to see the new manager
-      this.currentPage = this.totalPages;
     } else {
       alert('Please fill all required fields');
     }
   }
 
   editManager(manager: Manager) {
-    alert(`Edit functionality for ${manager.name} - Coming soon!`);
+    this.isEditing = true;
+    this.editingId = manager.id;
+    this.newManager = {
+      name: manager.name,
+      email: manager.email,
+      password: '', // Password not stored in list, reset to blank
+      company: manager.company,
+      contactNumber: manager.contactNumber
+    };
+
+    // Scroll to form
+    const formElement = document.querySelector('.manager-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   deleteManager(id: number) {
     if (confirm('Are you sure you want to delete this manager?')) {
       this.managers = this.managers.filter(m => m.id !== id);
-      
+
       // Adjust current page if necessary after deletion
       if (this.paginatedManagers.length === 0 && this.currentPage > 1) {
         this.currentPage--;
       }
-      
+
       alert('Manager deleted successfully!');
     }
   }
 
   isFormValid(): boolean {
+    // If editing, password is optional if untaught (but for now we require it or just checks non-empty)
+    // To keep it simple, we require all fields.
     return !!(
       this.newManager.name.trim() &&
       this.newManager.email.trim() &&
@@ -149,5 +185,7 @@ export class AdminManagersComponent {
 
   resetForm() {
     this.newManager = { name: '', email: '', password: '', company: '', contactNumber: '' };
+    this.isEditing = false;
+    this.editingId = null;
   }
 }
