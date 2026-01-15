@@ -17,7 +17,7 @@
   width: calc(100% - 280px);
 }
 
-:host ::ng-deep .sidebar.collapsed ~ .main-content {
+:host ::ng-deep .sidebar.collapsed~.main-content {
   margin-left: 80px;
   width: calc(100% - 80px);
 }
@@ -191,9 +191,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
@@ -223,9 +226,12 @@
 }
 
 @keyframes blink {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.4;
   }
@@ -320,6 +326,7 @@
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -398,6 +405,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -459,6 +467,7 @@
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -587,6 +596,7 @@
     opacity: 0;
     transform: translateY(-30px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -850,30 +860,4 @@
    ANIMATIONS
    ============================================ */
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.summary-card,
-.attendance-container {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.summary-card:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.summary-card:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.attendance-container {
-  animation-delay: 0.3s;
-}
+/* Animations removed to prevent refresh-like effect */

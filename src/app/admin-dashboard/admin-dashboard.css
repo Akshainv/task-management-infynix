@@ -17,7 +17,7 @@
   width: calc(100% - 280px);
 }
 
-:host ::ng-deep .sidebar.collapsed ~ .main-content {
+:host ::ng-deep .sidebar.collapsed~.main-content {
   margin-left: 80px;
   width: calc(100% - 80px);
 }
@@ -48,7 +48,7 @@
   background: white;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.05),
     0 4px 16px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,7 +73,7 @@
 
 .summary-card:hover {
   transform: translateY(-4px);
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.08),
     0 8px 24px rgba(0, 0, 0, 0.1);
 }
@@ -162,7 +162,7 @@
 .notifications-container {
   background: white;
   border-radius: 16px;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.05),
     0 4px 16px rgba(0, 0, 0, 0.06);
   overflow: hidden;
@@ -191,8 +191,15 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .section-title {
@@ -259,9 +266,9 @@
 }
 
 .notification-item:hover {
-  background: linear-gradient(90deg, 
-    rgba(249, 115, 22, 0.03) 0%, 
-    rgba(249, 250, 255, 0.5) 100%);
+  background: linear-gradient(90deg,
+      rgba(249, 115, 22, 0.03) 0%,
+      rgba(249, 250, 255, 0.5) 100%);
 }
 
 .notification-item:last-child {
@@ -452,7 +459,7 @@
     margin-top: 68px;
     width: 100%;
   }
-  
+
   .dashboard-container {
     padding: 20px;
   }
@@ -589,38 +596,7 @@
    ANIMATIONS & INTERACTIONS
    ============================================ */
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.summary-card,
-.notifications-container {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.summary-card:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.summary-card:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.summary-card:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.notifications-container {
-  animation-delay: 0.4s;
-}
-
+/* Animations removed to prevent refresh-like effect */
 .notifications-list {
   scroll-behavior: smooth;
 }
@@ -633,6 +609,7 @@
 }
 
 @media print {
+
   .refresh-btn,
   .notification-action,
   .view-all-link {
