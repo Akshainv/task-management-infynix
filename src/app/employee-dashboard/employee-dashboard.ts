@@ -105,6 +105,8 @@ export class EmployeeDashboardComponent implements OnInit {
       reader.onload = (e: ProgressEvent<FileReader>) => {
         this.photoPreview = e.target?.result as string;
         this.attendanceStatus.photoUploaded = true;
+        // Close the modal after file upload
+        this.closeCamera();
       };
       reader.onerror = () => {
         alert('Error reading file. Please try again.');
@@ -123,21 +125,25 @@ export class EmployeeDashboardComponent implements OnInit {
 
   async openCamera(): Promise<void> {
     this.showCameraModal = true;
-    
+
     try {
-      this.videoStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
+      // Request camera access
+      this.videoStream = await navigator.mediaDevices.getUserMedia({
+        video: {
           facingMode: 'user',
           width: { ideal: 1280 },
           height: { ideal: 720 }
-        } 
+        }
       });
-      
+
+      // Wait for DOM to update
       setTimeout(() => {
         const videoElement = document.getElementById('cameraVideo') as HTMLVideoElement;
         if (videoElement && this.videoStream) {
           videoElement.srcObject = this.videoStream;
-          videoElement.play();
+          videoElement.onloadedmetadata = () => {
+            videoElement.play().catch(e => console.error('Error playing video:', e));
+          };
         }
       }, 100);
     } catch (error) {
@@ -149,27 +155,29 @@ export class EmployeeDashboardComponent implements OnInit {
 
   capturePhoto(): void {
     const videoElement = document.getElementById('cameraVideo') as HTMLVideoElement;
-    const canvas = document.createElement('canvas');
-    
-    if (videoElement) {
+
+    if (videoElement && videoElement.srcObject) {
+      // Ensure video has dimensions and is ready
+      if (videoElement.videoWidth === 0 || videoElement.videoHeight === 0) {
+        console.warn('Video dimensions not ready yet');
+        return;
+      }
+
+      const canvas = document.createElement('canvas');
       canvas.width = videoElement.videoWidth;
       canvas.height = videoElement.videoHeight;
-      
+
       const context = canvas.getContext('2d');
       if (context) {
-        context.drawImage(videoElement, 0, 0);
+        // Draw the current video frame to canvas
+        context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to data URL and save it
+        this.photoPreview = canvas.toDataURL('image/jpeg', 0.9);
+        this.attendanceStatus.photoUploaded = true;
         
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              this.photoPreview = e.target?.result as string;
-              this.attendanceStatus.photoUploaded = true;
-              this.closeCamera();
-            };
-            reader.readAsDataURL(blob);
-          }
-        }, 'image/jpeg', 0.9);
+        // Close camera after capturing
+        this.closeCamera();
       }
     }
   }
@@ -185,7 +193,6 @@ export class EmployeeDashboardComponent implements OnInit {
   checkIn(): void {
     if (!this.attendanceStatus.photoUploaded) {
       // Open camera/upload modal when clicking Clock In without photo
-      this.showCameraModal = true;
       this.openCamera().catch(() => {
         // If camera fails, just show the modal for file upload
         this.showCameraModal = true;
@@ -193,6 +200,7 @@ export class EmployeeDashboardComponent implements OnInit {
       return;
     }
 
+    // Photo is already uploaded, proceed with check-in
     const now = new Date();
     this.attendanceStatus.isCheckedIn = true;
     this.attendanceStatus.checkInTime = now.toLocaleTimeString('en-US', {
