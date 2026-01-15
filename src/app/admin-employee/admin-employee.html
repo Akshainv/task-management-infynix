@@ -1,0 +1,181 @@
+<!-- admin-employees.component.html -->
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="main-content">
+  <div class="employees-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-title-section">
+          <div class="title-wrapper">
+            <i class="fas fa-users header-icon"></i>
+            <div>
+              <h1 class="page-title">Employee Management</h1>
+              <p class="page-subtitle">Create and manage employee accounts</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Card - Total Employees -->
+        <div class="stats-card-single">
+          <div class="stat-item">
+            <div class="stat-icon-wrapper total">
+              <i class="fas fa-user-friends"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-label">Total Employees</span>
+              <span class="stat-value">{{ employees.length }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Employee Card -->
+    <div class="employee-card create-employee-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="fas fa-user-plus"></i>
+          Create New Employee
+        </h2>
+      </div>
+      
+      <form class="employee-form" (ngSubmit)="createEmployee()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="employeeName">Employee Name</label>
+            <div class="input-wrapper">
+              <i class="fas fa-user input-icon"></i>
+              <input 
+                type="text" 
+                id="employeeName"
+                [(ngModel)]="newEmployee.name"
+                name="name"
+                placeholder="Enter full name"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-wrapper">
+              <i class="fas fa-envelope input-icon"></i>
+              <input 
+                type="email" 
+                id="email"
+                [(ngModel)]="newEmployee.email"
+                name="email"
+                placeholder="employee@company.com"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock input-icon"></i>
+              <input 
+                type="password" 
+                id="password"
+                [(ngModel)]="newEmployee.password"
+                name="password"
+                placeholder="••••••••"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contactNumber">Contact Number</label>
+            <div class="input-wrapper">
+              <i class="fas fa-phone input-icon"></i>
+              <input 
+                type="tel" 
+                id="contactNumber"
+                [(ngModel)]="newEmployee.contactNumber"
+                name="contactNumber"
+                placeholder="+91 98765 43210"
+                required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check"></i>
+            Create Employee
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            <i class="fas fa-times"></i>
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Employees List Card -->
+    <div class="employee-card employees-list-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="fas fa-list"></i>
+          Employees List
+        </h2>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="employees.length === 0">
+        <div class="empty-icon">
+          <i class="fas fa-users-slash"></i>
+        </div>
+        <h3 class="empty-title">No Employees Found</h3>
+        <p class="empty-description">Start by creating your first employee using the form above</p>
+      </div>
+
+      <!-- Employees Grid -->
+      <div class="employees-grid" *ngIf="employees.length > 0">
+        <div *ngFor="let employee of employees" class="employee-item-card">
+          
+          <!-- Employee Avatar & Info -->
+          <div class="employee-header">
+            <div class="employee-avatar">
+              {{ employee.name.charAt(0).toUpperCase() }}
+            </div>
+            <div class="employee-info">
+              <h3 class="employee-name">{{ employee.name }}</h3>
+              <p class="employee-email">{{ employee.email }}</p>
+            </div>
+          </div>
+
+          <!-- Employee Details -->
+          <div class="employee-details">
+            <div class="detail-item">
+              <i class="fas fa-envelope detail-icon"></i>
+              <span class="detail-text">{{ employee.email }}</span>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-phone detail-icon"></i>
+              <span class="detail-text">{{ employee.contactNumber }}</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="employee-actions">
+            <button class="action-btn edit-btn" 
+                    (click)="editEmployee(employee)"
+                    type="button">
+              <i class="fas fa-edit"></i>
+              Edit
+            </button>
+            <button class="action-btn delete-btn" 
+                    (click)="deleteEmployee(employee.id)"
+                    type="button">
+              <i class="fas fa-trash-alt"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,128 @@
+<app-employee-sidebar></app-employee-sidebar>
+<div class="main-content">
+  <div class="notifications-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-title-section">
+          <div class="title-wrapper">
+            <i class="fas fa-bell header-icon"></i>
+            <div>
+              <h1 class="page-title">Notifications</h1>
+              <p class="page-subtitle">Stay updated with your tasks and assignments</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Card - Unread Count -->
+        <div class="stats-card-single">
+          <div class="stat-item">
+            <div class="stat-icon-wrapper unread">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-label">Total</span>
+              <span class="stat-value">{{ getUnreadCount() }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loader"></div>
+      <p>Loading notifications...</p>
+    </div>
+
+    <!-- Notifications List -->
+    <div *ngIf="!isLoading && paginatedNotifications.length > 0" class="notifications-list">
+      <div *ngFor="let notification of paginatedNotifications" 
+           class="notification-item"
+           [ngClass]="getNotificationClass(notification.type)">
+        
+        <!-- Notification Icon -->
+        <div class="notification-icon-wrapper">
+          <i class="fas" [ngClass]="getNotificationIcon(notification.type)"></i>
+        </div>
+
+        <!-- Notification Content -->
+        <div class="notification-content">
+          <div class="notification-header">
+            <div class="manager-info">
+              <div class="manager-badge">
+                <i class="fas fa-user-tie"></i>
+                <span>{{ notification.managerName }}</span>
+              </div>
+              <span class="timestamp">{{ getTimeAgo(notification.timestamp) }}</span>
+            </div>
+          </div>
+
+          <p class="notification-message">{{ notification.message }}</p>
+          
+          <div class="task-details">
+            <div class="detail-item">
+              <i class="fas fa-tasks"></i>
+              <span class="detail-label">Task:</span>
+              <span class="detail-value">{{ notification.taskName }}</span>
+            </div>
+            <div *ngIf="notification.projectName" class="detail-item">
+              <i class="fas fa-project-diagram"></i>
+              <span class="detail-label">Project:</span>
+              <span class="detail-value">{{ notification.projectName }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mark as Read Button -->
+        <button class="mark-read-btn" 
+                (click)="markAsRead(notification, $event)"
+                title="Mark as read"
+                type="button">
+          <i class="fas fa-check"></i>
+          Mark as Read
+        </button>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && notifications.length > itemsPerPage" class="pagination-container">
+      <button class="pagination-btn" 
+              (click)="previousPage()"
+              [disabled]="currentPage === 1"
+              type="button">
+        <i class="fas fa-chevron-left"></i>
+        Previous
+      </button>
+      
+      <div class="page-numbers">
+        <button *ngFor="let page of getPageNumbers()"
+                class="page-number-btn"
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)"
+                type="button">
+          {{ page }}
+        </button>
+      </div>
+      
+      <button class="pagination-btn" 
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages"
+              type="button">
+        Next
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && notifications.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-bell-slash"></i>
+      </div>
+      <h2 class="empty-title">No notifications</h2>
+      <p class="empty-description">
+        All caught up! You have no notifications at the moment.
+      </p>
+    </div>
+  </div>
+</div>

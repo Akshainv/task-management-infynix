@@ -1,0 +1,149 @@
+<!-- employee-dashboard.component.html -->
+<app-employee-sidebar></app-employee-sidebar>
+
+<div class="main-content">
+  <div class="dashboard-container">
+
+    <!-- Summary Cards Section -->
+    <section class="summary-cards-section">
+      <div class="summary-cards-grid">
+        <div *ngFor="let card of summaryCards" class="summary-card" [style.background]="card.bgColor"
+          (click)="onCardClick(card.route)" [style.cursor]="card.route ? 'pointer' : 'default'">
+
+          <div class="summary-card::before"></div>
+
+          <div class="card-content">
+            <div class="card-icon" [style.background]="card.iconBg">
+              <i class="fas" [ngClass]="card.icon" [style.color]="card.accentColor"></i>
+            </div>
+
+            <div class="card-info">
+              <h3 class="card-title">{{ card.title }}</h3>
+              <p class="card-value" [style.color]="card.accentColor">{{ card.value }}</p>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <span class="card-trend">
+              <i class="fas fa-arrow-up"></i>
+              {{ card.description }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Attendance Section -->
+    <section class="attendance-section">
+      <div class="attendance-container">
+
+        <!-- Attendance Header -->
+        <div class="attendance-header">
+          <div class="header-left">
+            <i class="fas fa-clock header-icon"></i>
+            <h2 class="section-title">Daily Attendance</h2>
+          </div>
+          <div class="current-status" [ngClass]="getStatusClass()">
+            <i class="fas fa-circle status-indicator"></i>
+            <span>{{ getCurrentStatus() }}</span>
+          </div>
+        </div>
+
+        <!-- Attendance Content -->
+        <div class="attendance-content">
+
+          <!-- Instructions -->
+          <div class="attendance-instructions">
+            <p class="instruction-text">
+              <i class="fas fa-info-circle"></i>
+              Mark your attendance to start your workday
+            </p>
+          </div>
+
+          <!-- Photo Upload Section -->
+          <div class="photo-section">
+            <h3 class="photo-title">
+              <i class="fas fa-camera"></i>
+              Photo Verification
+            </h3>
+
+            <div class="photo-upload-area" *ngIf="!photoPreview">
+              <div class="upload-placeholder">
+                <i class="fas fa-user-circle placeholder-icon"></i>
+                <p class="upload-text">Upload your photo for verification</p>
+                <div class="upload-buttons">
+                  <button type="button" class="upload-btn" (click)="triggerFileInput()">
+                    <i class="fas fa-upload"></i>
+                    Choose File
+                  </button>
+                  <button type="button" class="camera-btn" (click)="openCamera()">
+                    <i class="fas fa-camera"></i>
+                    Take Photo
+                  </button>
+                </div>
+                <input type="file" id="photoUpload" accept="image/*" (change)="onFileSelected($event)"
+                  style="display: none;">
+              </div>
+            </div>
+
+            <!-- Photo Preview -->
+            <div class="photo-preview-area" *ngIf="photoPreview">
+              <div class="preview-container">
+                <img [src]="photoPreview" alt="Attendance Photo" class="preview-image">
+                <button type="button" class="remove-photo-btn" (click)="removePhoto()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <p class="photo-verified">
+                <i class="fas fa-check-circle"></i>
+                Photo verified and ready
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button type="button" class="check-in-btn"
+              [disabled]="attendanceStatus.isCheckedIn || !attendanceStatus.photoUploaded" (click)="checkIn()">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>CHECK IN</span>
+            </button>
+
+            <button type="button" class="check-out-btn"
+              [disabled]="!attendanceStatus.isCheckedIn || attendanceStatus.checkOutTime" (click)="checkOut()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>CHECK OUT</span>
+            </button>
+          </div>
+
+          <!-- Status Message -->
+          <div class="status-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Photo verification required when checking in • Current Status: <strong>{{ getCurrentStatus()
+                }}</strong></span>
+          </div>
+
+          <!-- Attendance Times Display -->
+          <div class="attendance-times" *ngIf="attendanceStatus.checkInTime">
+            <div class="time-entry">
+              <i class="fas fa-sign-in-alt time-icon check-in-icon"></i>
+              <div class="time-details">
+                <span class="time-label">Check In Time</span>
+                <span class="time-value">{{ attendanceStatus.checkInTime }}</span>
+              </div>
+            </div>
+            <div class="time-entry" *ngIf="attendanceStatus.checkOutTime">
+              <i class="fas fa-sign-out-alt time-icon check-out-icon"></i>
+              <div class="time-details">
+                <span class="time-label">Check Out Time</span>
+                <span class="time-value">{{ attendanceStatus.checkOutTime }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</div>

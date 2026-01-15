@@ -1,0 +1,91 @@
+<!-- admin-dashboard.html -->
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="main-content">
+  <div class="dashboard-container">
+    <!-- Summary Cards Section -->
+    <div class="summary-cards-section">
+      <div class="summary-cards-grid">
+        <div class="summary-card" 
+             *ngFor="let card of summaryCards"
+             [style.background]="card.bgColor"
+             (click)="onCardClick(card.route)"
+             role="button"
+             tabindex="0"
+             [attr.aria-label]="'Navigate to ' + card.title">
+          <div class="card-content">
+            <div class="card-icon" 
+                 [style.background]="card.iconBg">
+              <i class="fas" [ngClass]="card.icon" 
+                 [style.color]="card.accentColor"></i>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">{{ card.title }}</h3>
+              <p class="card-value" [style.color]="card.accentColor">{{ card.value }}</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-trend">
+              <i class="fas fa-arrow-up"></i>
+              <span>8.5% vs last month</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Service Requests Section -->
+    <div class="notifications-section">
+      <div class="notifications-container">
+        <div class="notifications-header">
+          <div class="header-left">
+            <i class="fas fa-clipboard-list header-icon"></i>
+            <h2 class="section-title">Recent Service Requests</h2>
+          </div>
+          <button class="refresh-btn" (click)="refreshDashboard()" title="Refresh">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+
+        <div class="notifications-list">
+          <div class="notification-item" 
+               *ngFor="let request of recentServiceRequests"
+               (click)="onServiceRequestClick(request)"
+               [class]="getPriorityClass(request.priority)">
+            <div class="notification-indicator" 
+                 [style.background]="request.color"></div>
+            <div class="notification-icon" 
+                 [style.background]="request.color + '20'"
+                 [style.border-color]="request.color + '30'">
+              <i class="fas" [ngClass]="request.icon" 
+                 [style.color]="request.color"></i>
+            </div>
+            <div class="notification-content">
+              <div class="request-header">
+                <span class="manager-name">{{ request.managerName }}</span>
+                <span class="status-badge" [ngClass]="getStatusBadgeClass(request.status)">
+                  {{ request.status }}
+                </span>
+              </div>
+              <p class="notification-message">{{ request.message }}</p>
+              <span class="notification-timestamp">
+                <i class="far fa-clock"></i>
+                {{ request.timestamp }}
+              </span>
+            </div>
+            <button class="notification-action" title="View details">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="notifications-footer">
+          <a href="#" class="view-all-link">
+            View all service requests
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

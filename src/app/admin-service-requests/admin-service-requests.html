@@ -1,0 +1,96 @@
+<!-- admin-notifications.component.html -->
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="main-content">
+  <div class="notifications-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-title-section">
+          <div class="title-wrapper">
+            <i class="fas fa-clipboard-list header-icon"></i>
+            <div>
+              <h1 class="page-title">Service Requests</h1>
+              <p class="page-subtitle">Manage and respond to manager service requirements</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Card - Pending Requests -->
+        <div class="stats-card-single" *ngIf="serviceRequests.length > 0">
+          <div class="stat-item">
+            <div class="stat-icon-wrapper pending">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-label">Pending Requests</span>
+              <span class="stat-value">{{ serviceRequests.length }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mark All Button -->
+    <div class="action-bar" *ngIf="serviceRequests.length > 0">
+      <button class="btn btn-mark-all" (click)="deleteAll()">
+        <i class="fas fa-check-double"></i>
+        Mark All as Read
+      </button>
+    </div>
+
+    <!-- Service Requests Card -->
+    <div class="requests-card">
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="serviceRequests.length === 0">
+        <div class="empty-icon">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <h3 class="empty-title">No Service Requests</h3>
+        <p class="empty-description">All service requests have been handled. Great work!</p>
+      </div>
+
+      <!-- Service Requests List -->
+      <div class="requests-list" *ngIf="serviceRequests.length > 0">
+        <div *ngFor="let request of serviceRequests" class="request-item">
+          
+          <!-- Request Icon -->
+          <div class="request-icon-wrapper" [attr.data-type]="request.type">
+            <i class="fas" [ngClass]="getRequestIcon(request.type)"></i>
+          </div>
+
+          <!-- Request Content -->
+          <div class="request-content">
+            <div class="request-header-row">
+              <div class="manager-badge">
+                <i class="fas fa-user-tie"></i>
+                <span>{{ request.managerName }}</span>
+              </div>
+              <div class="request-timestamp">
+                <i class="fas fa-clock"></i>
+                {{ request.timestamp }}
+              </div>
+            </div>
+
+            <p class="request-message">{{ request.message }}</p>
+            
+            <div class="request-type-tag" [attr.data-type]="request.type">
+              <i class="fas fa-tag"></i>
+              <span>{{ request.type | titlecase }} Request</span>
+            </div>
+          </div>
+
+          <!-- Mark Read Button -->
+          <button class="action-btn mark-read-btn" 
+                  (click)="markAsRead(request.id)"
+                  type="button">
+            <i class="fas fa-check"></i>
+            Mark as Read
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
