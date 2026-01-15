@@ -41,7 +41,7 @@ export class EmployeeMyTasksComponent implements OnInit {
   filteredTasks: Task[] = [];
   paginatedTasks: Task[] = [];
   isLoading = true;
-  
+
   // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 6;
@@ -56,7 +56,7 @@ export class EmployeeMyTasksComponent implements OnInit {
     audio: [],
     notes: ''
   };
-  
+
   // Preview URLs
   photoPreviewUrls: string[] = [];
   videoPreviewUrls: string[] = [];
@@ -68,7 +68,7 @@ export class EmployeeMyTasksComponent implements OnInit {
   isCameraActive = false;
   audioRecordingTime = 0;
   videoRecordingTime = 0;
-  
+
   // Media Streams and Recorders
   private mediaRecorder: MediaRecorder | null = null;
   private videoRecorder: MediaRecorder | null = null;
@@ -224,8 +224,31 @@ export class EmployeeMyTasksComponent implements OnInit {
       }
     ];
 
-    this.filteredTasks = [...this.tasks];
+    this.onSearch();
+  }
+
+  // Search Functionality
+  searchQuery: string = '';
+
+  onSearch(): void {
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredTasks = this.tasks.filter(task =>
+        task.name.toLowerCase().includes(query) ||
+        task.description.toLowerCase().includes(query) ||
+        task.location.toLowerCase().includes(query) ||
+        task.priority.toLowerCase().includes(query)
+      );
+    } else {
+      this.filteredTasks = [...this.tasks];
+    }
+    this.currentPage = 1;
     this.updatePagination();
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.onSearch();
   }
 
   // Status and Priority Classes
@@ -313,11 +336,11 @@ export class EmployeeMyTasksComponent implements OnInit {
   async capturePhoto(): Promise<void> {
     try {
       if (!this.isCameraActive) {
-        this.cameraStream = await navigator.mediaDevices.getUserMedia({ 
-          video: { facingMode: 'environment' } 
+        this.cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }
         });
         this.isCameraActive = true;
-        
+
         // Display camera preview
         const videoElement = document.getElementById('cameraPreview') as HTMLVideoElement;
         if (videoElement) {
@@ -331,7 +354,7 @@ export class EmployeeMyTasksComponent implements OnInit {
         canvas.width = videoElement.videoWidth;
         canvas.height = videoElement.videoHeight;
         const context = canvas.getContext('2d');
-        
+
         if (context) {
           context.drawImage(videoElement, 0, 0);
           canvas.toBlob((blob) => {
@@ -342,7 +365,7 @@ export class EmployeeMyTasksComponent implements OnInit {
             }
           }, 'image/jpeg');
         }
-        
+
         this.stopCamera();
       }
     } catch (error) {
@@ -357,7 +380,7 @@ export class EmployeeMyTasksComponent implements OnInit {
       this.cameraStream = null;
     }
     this.isCameraActive = false;
-    
+
     const videoElement = document.getElementById('cameraPreview') as HTMLVideoElement;
     if (videoElement) {
       videoElement.srcObject = null;
@@ -382,14 +405,14 @@ export class EmployeeMyTasksComponent implements OnInit {
         const file = new File([audioBlob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
         this.taskUpdate.audio.push(file);
         this.audioPreviewUrls.push(URL.createObjectURL(audioBlob));
-        
+
         stream.getTracks().forEach(track => track.stop());
       };
 
       this.mediaRecorder.start();
       this.isRecordingAudio = true;
       this.audioRecordingTime = 0;
-      
+
       this.recordingInterval = setInterval(() => {
         this.audioRecordingTime++;
       }, 1000);
@@ -403,7 +426,7 @@ export class EmployeeMyTasksComponent implements OnInit {
     if (this.mediaRecorder && this.isRecordingAudio) {
       this.mediaRecorder.stop();
       this.isRecordingAudio = false;
-      
+
       if (this.recordingInterval) {
         clearInterval(this.recordingInterval);
         this.recordingInterval = null;
@@ -414,11 +437,11 @@ export class EmployeeMyTasksComponent implements OnInit {
   // ========== VIDEO RECORDING ==========
   async startVideoRecording(): Promise<void> {
     try {
-      this.videoStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' }, 
-        audio: true 
+      this.videoStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+        audio: true
       });
-      
+
       // Display video preview
       const videoElement = document.getElementById('videoPreview') as HTMLVideoElement;
       if (videoElement) {
@@ -440,10 +463,10 @@ export class EmployeeMyTasksComponent implements OnInit {
         const file = new File([videoBlob], `video_${Date.now()}.webm`, { type: 'video/webm' });
         this.taskUpdate.videos.push(file);
         this.videoPreviewUrls.push(URL.createObjectURL(videoBlob));
-        
+
         this.videoStream?.getTracks().forEach(track => track.stop());
         this.videoStream = null;
-        
+
         if (videoElement) {
           videoElement.srcObject = null;
         }
@@ -452,7 +475,7 @@ export class EmployeeMyTasksComponent implements OnInit {
       this.videoRecorder.start();
       this.isRecordingVideo = true;
       this.videoRecordingTime = 0;
-      
+
       this.recordingInterval = setInterval(() => {
         this.videoRecordingTime++;
       }, 1000);
@@ -466,7 +489,7 @@ export class EmployeeMyTasksComponent implements OnInit {
     if (this.videoRecorder && this.isRecordingVideo) {
       this.videoRecorder.stop();
       this.isRecordingVideo = false;
-      
+
       if (this.recordingInterval) {
         clearInterval(this.recordingInterval);
         this.recordingInterval = null;
@@ -549,7 +572,7 @@ export class EmployeeMyTasksComponent implements OnInit {
     if (!this.selectedTask) return;
 
     this.selectedTask.attachments.notes = this.taskUpdate.notes;
-    
+
     console.log('Task Update Submitted:', {
       taskId: this.selectedTask.id,
       photos: this.taskUpdate.photos.length,
@@ -559,7 +582,7 @@ export class EmployeeMyTasksComponent implements OnInit {
     });
 
     alert('Task updated successfully!');
-    
+
     this.closeUpdateModal();
   }
 
@@ -601,10 +624,10 @@ export class EmployeeMyTasksComponent implements OnInit {
 
   formatDeadline(deadline: string): string {
     const date = new Date(deadline);
-    const options: Intl.DateTimeFormatOptions = { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     };
     return date.toLocaleDateString('en-US', options);
   }

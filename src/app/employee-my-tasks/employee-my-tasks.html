@@ -3,31 +3,29 @@
 
 <div class="main-content">
   <div class="tasks-container">
-    
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="header-content">
-        <div class="header-title-section">
-          <div class="title-wrapper">
-            <i class="fas fa-tasks header-icon"></i>
-            <div>
-              <h1 class="page-title">My Tasks</h1>
-              <p class="page-subtitle">View and update your assigned tasks</p>
-            </div>
-          </div>
-        </div>
 
-        <!-- Stats Card - Total Tasks -->
-        <div class="stats-card-single">
-          <div class="stat-item">
-            <div class="stat-icon-wrapper total">
-              <i class="fas fa-clipboard-list"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-label">Total Tasks</span>
-              <span class="stat-value">{{ tasks.length }}</span>
-            </div>
-          </div>
+    <!-- Toolbar Section -->
+    <div class="tasks-toolbar">
+      <!-- Search Bar (Left) -->
+      <div class="search-bar-wrapper">
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Search tasks..." [(ngModel)]="searchQuery"
+            (input)="onSearch()">
+          <button *ngIf="searchQuery" class="clear-search-btn" (click)="clearSearch()" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Total Tasks Badge (Right) -->
+      <div class="total-tasks-badge">
+        <div class="badge-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div class="badge-content">
+          <span class="badge-label">Total Tasks</span>
+          <span class="badge-value">{{ tasks.length }}</span>
         </div>
       </div>
     </div>
@@ -40,10 +38,8 @@
 
     <!-- Tasks Grid -->
     <div *ngIf="!isLoading && paginatedTasks.length > 0" class="tasks-grid">
-      <div *ngFor="let task of paginatedTasks" 
-           class="task-card" 
-           [ngClass]="'task-card-' + task.colorTheme">
-        
+      <div *ngFor="let task of paginatedTasks" class="task-card" [ngClass]="'task-card-' + task.colorTheme">
+
         <!-- Card Header -->
         <div class="card-header">
           <h2 class="task-name">{{ task.name }}</h2>
@@ -92,28 +88,19 @@
 
     <!-- Pagination -->
     <div *ngIf="!isLoading && filteredTasks.length > 0" class="pagination-container">
-      <button class="pagination-btn" 
-              (click)="previousPage()"
-              [disabled]="currentPage === 1"
-              type="button">
+      <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1" type="button">
         <i class="fas fa-chevron-left"></i>
         Previous
       </button>
-      
+
       <div class="page-numbers">
-        <button *ngFor="let page of getPageNumbers()"
-                class="page-number-btn"
-                [class.active]="page === currentPage"
-                (click)="goToPage(page)"
-                type="button">
+        <button *ngFor="let page of getPageNumbers()" class="page-number-btn" [class.active]="page === currentPage"
+          (click)="goToPage(page)" type="button">
           {{ page }}
         </button>
       </div>
-      
-      <button class="pagination-btn" 
-              (click)="nextPage()"
-              [disabled]="currentPage === totalPages"
-              type="button">
+
+      <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages" type="button">
         Next
         <i class="fas fa-chevron-right"></i>
       </button>
@@ -134,7 +121,7 @@
 <!-- Update Task Modal -->
 <div class="modal-overlay" *ngIf="isUpdateModalOpen" (click)="closeUpdateModal()">
   <div class="modal-container" (click)="$event.stopPropagation()">
-    
+
     <!-- Modal Header -->
     <div class="modal-header">
       <h2 class="modal-title">
@@ -148,7 +135,7 @@
 
     <!-- Modal Content -->
     <div class="modal-content">
-      
+
       <!-- Task Info Display -->
       <div class="task-info-display" *ngIf="selectedTask">
         <h3 class="info-title">{{ selectedTask.name }}</h3>
@@ -157,182 +144,155 @@
 
       <!-- Upload Sections -->
       <div class="upload-sections">
-        
+
         <!-- Photo Upload Section - REPLACE EXISTING -->
-<div class="upload-section">
-  <h4 class="section-title">
-    <i class="fas fa-camera"></i>
-    Photos
-  </h4>
-  <div class="upload-area">
-    <!-- Camera Capture Button -->
-    <button class="capture-btn camera-btn" 
-            (click)="capturePhoto()"
-            [class.active]="isCameraActive"
-            type="button">
-      <i class="fas" [ngClass]="isCameraActive ? 'fa-camera' : 'fa-camera'"></i>
-      {{ isCameraActive ? 'Capture Photo' : 'Open Camera' }}
-    </button>
-    
-    <!-- File Upload Button (Fallback) -->
-    <input type="file" 
-           #photoUpload
-           id="photoUpload" 
-           accept="image/*" 
-           multiple
-           (change)="onPhotoSelected($event)"
-           style="display: none;">
-    <button class="upload-trigger-btn" 
-            (click)="photoUpload.click()"
-            type="button">
-      <i class="fas fa-cloud-upload-alt"></i>
-      Upload from Files
-    </button>
-  </div>
-  
-  <!-- Camera Preview -->
-  <div class="camera-preview-container" *ngIf="isCameraActive">
-    <video id="cameraPreview" class="camera-preview" autoplay playsinline></video>
-    <div class="camera-controls">
-      <button class="cancel-capture-btn" (click)="stopCamera()" type="button">
-        <i class="fas fa-times"></i>
-        Cancel
-      </button>
-    </div>
-  </div>
-  
-  <!-- Photo Previews -->
-  <div class="preview-grid" *ngIf="photoPreviewUrls.length > 0">
-    <div *ngFor="let url of photoPreviewUrls; let i = index" class="preview-item">
-      <img [src]="url" alt="Photo preview" class="preview-image">
-      <button class="remove-preview-btn" (click)="removePhoto(i)" type="button">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-  </div>
-</div>
+        <div class="upload-section">
+          <h4 class="section-title">
+            <i class="fas fa-camera"></i>
+            Photos
+          </h4>
+          <div class="upload-area">
+            <!-- Camera Capture Button -->
+            <button class="capture-btn camera-btn" (click)="capturePhoto()" [class.active]="isCameraActive"
+              type="button">
+              <i class="fas" [ngClass]="isCameraActive ? 'fa-camera' : 'fa-camera'"></i>
+              {{ isCameraActive ? 'Capture Photo' : 'Open Camera' }}
+            </button>
 
-<!-- Video Upload Section - REPLACE EXISTING -->
-<div class="upload-section">
-  <h4 class="section-title">
-    <i class="fas fa-video"></i>
-    Videos
-  </h4>
-  <div class="upload-area">
-    <!-- Video Recording Button -->
-    <button class="capture-btn video-btn" 
-            (click)="isRecordingVideo ? stopVideoRecording() : startVideoRecording()"
-            [class.recording]="isRecordingVideo"
-            type="button">
-      <i class="fas" [ngClass]="isRecordingVideo ? 'fa-stop-circle' : 'fa-video'"></i>
-      {{ isRecordingVideo ? 'Stop Recording' : 'Record Video' }}
-      <span *ngIf="isRecordingVideo" class="recording-time">
-        {{ formatRecordingTime(videoRecordingTime) }}
-      </span>
-    </button>
-    
-    <!-- File Upload Button (Fallback) -->
-    <input type="file" 
-           #videoUpload
-           id="videoUpload" 
-           accept="video/*" 
-           multiple
-           (change)="onVideoSelected($event)"
-           style="display: none;">
-    <button class="upload-trigger-btn" 
-            (click)="videoUpload.click()"
-            type="button">
-      <i class="fas fa-cloud-upload-alt"></i>
-      Upload from Files
-    </button>
-  </div>
-  
-  <!-- Video Preview -->
-  <div class="video-preview-container" *ngIf="isRecordingVideo">
-    <video id="videoPreview" class="video-preview" autoplay playsinline muted></video>
-    <div class="recording-indicator">
-      <span class="recording-dot"></span>
-      Recording {{ formatRecordingTime(videoRecordingTime) }}
-    </div>
-  </div>
-  
-  <!-- Video Previews -->
-  <div class="preview-list" *ngIf="videoPreviewUrls.length > 0">
-    <div *ngFor="let url of videoPreviewUrls; let i = index" class="file-item">
-      <i class="fas fa-file-video file-icon"></i>
-      <span class="file-name">Video {{ i + 1 }}</span>
-      <button class="remove-file-btn" (click)="removeVideo(i)" type="button">
-        <i class="fas fa-trash"></i>
-      </button>
-    </div>
-  </div>
-</div>
+            <!-- File Upload Button (Fallback) -->
+            <input type="file" #photoUpload id="photoUpload" accept="image/*" multiple
+              (change)="onPhotoSelected($event)" style="display: none;">
+            <button class="upload-trigger-btn" (click)="photoUpload.click()" type="button">
+              <i class="fas fa-cloud-upload-alt"></i>
+              Upload from Files
+            </button>
+          </div>
 
-<!-- Audio Upload Section - REPLACE EXISTING -->
-<div class="upload-section">
-  <h4 class="section-title">
-    <i class="fas fa-microphone"></i>
-    Audio / Voice Notes
-  </h4>
-  <div class="upload-area">
-    <!-- Audio Recording Button -->
-    <button class="capture-btn audio-btn" 
-            (click)="isRecordingAudio ? stopAudioRecording() : startAudioRecording()"
-            [class.recording]="isRecordingAudio"
-            type="button">
-      <i class="fas" [ngClass]="isRecordingAudio ? 'fa-stop-circle' : 'fa-microphone'"></i>
-      {{ isRecordingAudio ? 'Stop Recording' : 'Record Audio' }}
-      <span *ngIf="isRecordingAudio" class="recording-time">
-        {{ formatRecordingTime(audioRecordingTime) }}
-      </span>
-    </button>
-    
-    <!-- File Upload Button (Fallback) -->
-    <input type="file" 
-           #audioUpload
-           id="audioUpload" 
-           accept="audio/*" 
-           multiple
-           (change)="onAudioSelected($event)"
-           style="display: none;">
-    <button class="upload-trigger-btn" 
-            (click)="audioUpload.click()"
-            type="button">
-      <i class="fas fa-cloud-upload-alt"></i>
-      Upload from Files
-    </button>
-  </div>
-  
-  <!-- Recording Indicator -->
-  <div class="recording-status" *ngIf="isRecordingAudio">
-    <div class="recording-indicator">
-      <span class="recording-dot"></span>
-      Recording {{ formatRecordingTime(audioRecordingTime) }}
-    </div>
-  </div>
-  
-  <!-- Audio Previews -->
-  <div class="preview-list" *ngIf="audioPreviewUrls.length > 0">
-    <div *ngFor="let url of audioPreviewUrls; let i = index" class="file-item">
-      <i class="fas fa-file-audio file-icon"></i>
-      <span class="file-name">Audio {{ i + 1 }}</span>
-      <audio [src]="url" controls class="audio-player"></audio>
-      <button class="remove-file-btn" (click)="removeAudio(i)" type="button">
-        <i class="fas fa-trash"></i>
-      </button>
-    </div>
-  </div>
-</div>
+          <!-- Camera Preview -->
+          <div class="camera-preview-container" *ngIf="isCameraActive">
+            <video id="cameraPreview" class="camera-preview" autoplay playsinline></video>
+            <div class="camera-controls">
+              <button class="cancel-capture-btn" (click)="stopCamera()" type="button">
+                <i class="fas fa-times"></i>
+                Cancel
+              </button>
+            </div>
+          </div>
+
+          <!-- Photo Previews -->
+          <div class="preview-grid" *ngIf="photoPreviewUrls.length > 0">
+            <div *ngFor="let url of photoPreviewUrls; let i = index" class="preview-item">
+              <img [src]="url" alt="Photo preview" class="preview-image">
+              <button class="remove-preview-btn" (click)="removePhoto(i)" type="button">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Upload Section - REPLACE EXISTING -->
+        <div class="upload-section">
+          <h4 class="section-title">
+            <i class="fas fa-video"></i>
+            Videos
+          </h4>
+          <div class="upload-area">
+            <!-- Video Recording Button -->
+            <button class="capture-btn video-btn"
+              (click)="isRecordingVideo ? stopVideoRecording() : startVideoRecording()"
+              [class.recording]="isRecordingVideo" type="button">
+              <i class="fas" [ngClass]="isRecordingVideo ? 'fa-stop-circle' : 'fa-video'"></i>
+              {{ isRecordingVideo ? 'Stop Recording' : 'Record Video' }}
+              <span *ngIf="isRecordingVideo" class="recording-time">
+                {{ formatRecordingTime(videoRecordingTime) }}
+              </span>
+            </button>
+
+            <!-- File Upload Button (Fallback) -->
+            <input type="file" #videoUpload id="videoUpload" accept="video/*" multiple
+              (change)="onVideoSelected($event)" style="display: none;">
+            <button class="upload-trigger-btn" (click)="videoUpload.click()" type="button">
+              <i class="fas fa-cloud-upload-alt"></i>
+              Upload from Files
+            </button>
+          </div>
+
+          <!-- Video Preview -->
+          <div class="video-preview-container" *ngIf="isRecordingVideo">
+            <video id="videoPreview" class="video-preview" autoplay playsinline muted></video>
+            <div class="recording-indicator">
+              <span class="recording-dot"></span>
+              Recording {{ formatRecordingTime(videoRecordingTime) }}
+            </div>
+          </div>
+
+          <!-- Video Previews -->
+          <div class="preview-list" *ngIf="videoPreviewUrls.length > 0">
+            <div *ngFor="let url of videoPreviewUrls; let i = index" class="file-item">
+              <i class="fas fa-file-video file-icon"></i>
+              <span class="file-name">Video {{ i + 1 }}</span>
+              <button class="remove-file-btn" (click)="removeVideo(i)" type="button">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Upload Section - REPLACE EXISTING -->
+        <div class="upload-section">
+          <h4 class="section-title">
+            <i class="fas fa-microphone"></i>
+            Audio / Voice Notes
+          </h4>
+          <div class="upload-area">
+            <!-- Audio Recording Button -->
+            <button class="capture-btn audio-btn"
+              (click)="isRecordingAudio ? stopAudioRecording() : startAudioRecording()"
+              [class.recording]="isRecordingAudio" type="button">
+              <i class="fas" [ngClass]="isRecordingAudio ? 'fa-stop-circle' : 'fa-microphone'"></i>
+              {{ isRecordingAudio ? 'Stop Recording' : 'Record Audio' }}
+              <span *ngIf="isRecordingAudio" class="recording-time">
+                {{ formatRecordingTime(audioRecordingTime) }}
+              </span>
+            </button>
+
+            <!-- File Upload Button (Fallback) -->
+            <input type="file" #audioUpload id="audioUpload" accept="audio/*" multiple
+              (change)="onAudioSelected($event)" style="display: none;">
+            <button class="upload-trigger-btn" (click)="audioUpload.click()" type="button">
+              <i class="fas fa-cloud-upload-alt"></i>
+              Upload from Files
+            </button>
+          </div>
+
+          <!-- Recording Indicator -->
+          <div class="recording-status" *ngIf="isRecordingAudio">
+            <div class="recording-indicator">
+              <span class="recording-dot"></span>
+              Recording {{ formatRecordingTime(audioRecordingTime) }}
+            </div>
+          </div>
+
+          <!-- Audio Previews -->
+          <div class="preview-list" *ngIf="audioPreviewUrls.length > 0">
+            <div *ngFor="let url of audioPreviewUrls; let i = index" class="file-item">
+              <i class="fas fa-file-audio file-icon"></i>
+              <span class="file-name">Audio {{ i + 1 }}</span>
+              <audio [src]="url" controls class="audio-player"></audio>
+              <button class="remove-file-btn" (click)="removeAudio(i)" type="button">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
         <!-- Text Notes -->
         <div class="upload-section">
           <h4 class="section-title">
             <i class="fas fa-sticky-note"></i>
             Text Notes
           </h4>
-          <textarea class="notes-textarea" 
-                    [(ngModel)]="taskUpdate.notes"
-                    placeholder="Add your notes here..."
-                    rows="5"></textarea>
+          <textarea class="notes-textarea" [(ngModel)]="taskUpdate.notes" placeholder="Add your notes here..."
+            rows="5"></textarea>
         </div>
 
       </div>

@@ -2,167 +2,132 @@
 <app-admin-sidebar></app-admin-sidebar>
 <div class="main-content">
   <div class="managers-container">
-<div class="project-overview-container">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="header-title-section">
-        <div class="title-wrapper">
-          <i class="fas fa-project-diagram header-icon"></i>
-          <div>
-            <h1 class="page-title">Project Overview</h1>
-            <p class="page-subtitle">Manage and monitor all active projects</p>
-          </div>
+    <div class="project-overview-container">
+      <div class="overview-header">
+        <!-- Filter Buttons (Left) -->
+        <div class="filter-container">
+          <button class="filter-btn" [class.active]="selectedFilter === 'all'" (click)="onFilterChange('all')"
+            type="button">
+            <i class="fas fa-th"></i>
+            All Projects
+          </button>
+          <button class="filter-btn" [class.active]="selectedFilter === 'in-progress'"
+            (click)="onFilterChange('in-progress')" type="button">
+            <i class="fas fa-spinner"></i>
+            In Progress
+          </button>
+          <button class="filter-btn" [class.active]="selectedFilter === 'completed'"
+            (click)="onFilterChange('completed')" type="button">
+            <i class="fas fa-check-circle"></i>
+            Completed
+          </button>
+          <button class="filter-btn" [class.active]="selectedFilter === 'on-hold'" (click)="onFilterChange('on-hold')"
+            type="button">
+            <i class="fas fa-pause-circle"></i>
+            On Hold
+          </button>
         </div>
-      </div>
 
-      <!-- Single Stats Card - Total Projects -->
-      <div class="stats-card-single">
-        <div class="stat-item">
-          <div class="stat-icon-wrapper total">
+        <!-- Total Projects Card (Right) -->
+        <div class="total-projects-badge">
+          <div class="badge-icon">
             <i class="fas fa-folder-open"></i>
           </div>
-          <div class="stat-content">
-            <span class="stat-label">Total Projects</span>
-            <span class="stat-value">{{ projects.length }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Filter Buttons -->
-    <div class="filter-container">
-      <button class="filter-btn" 
-              [class.active]="selectedFilter === 'all'"
-              (click)="onFilterChange('all')"
-              type="button">
-        <i class="fas fa-th"></i>
-        All Projects
-      </button>
-      <button class="filter-btn" 
-              [class.active]="selectedFilter === 'in-progress'"
-              (click)="onFilterChange('in-progress')"
-              type="button">
-        <i class="fas fa-spinner"></i>
-        In Progress
-      </button>
-      <button class="filter-btn" 
-              [class.active]="selectedFilter === 'completed'"
-              (click)="onFilterChange('completed')"
-              type="button">
-        <i class="fas fa-check-circle"></i>
-        Completed
-      </button>
-      <button class="filter-btn" 
-              [class.active]="selectedFilter === 'on-hold'"
-              (click)="onFilterChange('on-hold')"
-              type="button">
-        <i class="fas fa-pause-circle"></i>
-        On Hold
-      </button>
-    </div>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <div class="loader"></div>
-    <p>Loading projects...</p>
-  </div>
-
-  <!-- Projects Grid -->
-  <div *ngIf="!isLoading && paginatedProjects.length > 0" class="projects-grid">
-    <div *ngFor="let project of paginatedProjects" 
-         class="project-card" 
-         [ngClass]="'project-card-' + project.colorTheme">
-      
-      <!-- Card Header -->
-      <div class="card-header">
-        <h2 class="project-name">{{ project.name }}</h2>
-        <span class="status-badge" [ngClass]="getStatusClass(project.status)">
-          {{ project.status }}
-        </span>
-      </div>
-
-      <!-- Progress Section -->
-      <div class="progress-section">
-        <div class="progress-header">
-          <span class="progress-label">Progress</span>
-          <span class="progress-percentage">{{ project.progress }}%</span>
-        </div>
-        <div class="progress-bar-container">
-          <div class="progress-bar" 
-               [ngClass]="getProgressBarClass(project.status)"
-               [style.width.%]="project.progress">
+          <div class="badge-content">
+            <span class="badge-label">Total Projects</span>
+            <span class="badge-value">{{ projects.length }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Manager Information -->
-      <div class="manager-section">
-        <span class="section-label">Project Manager</span>
-        <div class="manager-info">
-          <div class="manager-avatar">
-            <span class="avatar-initials">{{ project.manager.initials }}</span>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="loader"></div>
+        <p>Loading projects...</p>
+      </div>
+
+      <!-- Projects Grid -->
+      <div *ngIf="!isLoading && paginatedProjects.length > 0" class="projects-grid">
+        <div *ngFor="let project of paginatedProjects" class="project-card"
+          [ngClass]="'project-card-' + project.colorTheme">
+
+          <!-- Card Header -->
+          <div class="card-header">
+            <h2 class="project-name">{{ project.name }}</h2>
+            <span class="status-badge" [ngClass]="getStatusClass(project.status)">
+              {{ project.status }}
+            </span>
           </div>
-          <span class="manager-name">{{ project.manager.name }}</span>
+
+          <!-- Progress Section -->
+          <div class="progress-section">
+            <div class="progress-header">
+              <span class="progress-label">Progress</span>
+              <span class="progress-percentage">{{ project.progress }}%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" [ngClass]="getProgressBarClass(project.status)"
+                [style.width.%]="project.progress">
+              </div>
+            </div>
+          </div>
+
+          <!-- Manager Information -->
+          <div class="manager-section">
+            <span class="section-label">Project Manager</span>
+            <div class="manager-info">
+              <div class="manager-avatar">
+                <span class="avatar-initials">{{ project.manager.initials }}</span>
+              </div>
+              <span class="manager-name">{{ project.manager.name }}</span>
+            </div>
+          </div>
+
+          <!-- Employees Section -->
+          <div class="employees-section">
+            <span class="section-label">Assigned Employees</span>
+            <div class="employees-list">
+              <div *ngFor="let employee of getVisibleEmployees(project.employees)" class="employee-chip"
+                [title]="employee.name">
+                <span class="employee-initials">{{ employee.initials }}</span>
+                <span class="employee-name">{{ employee.name }}</span>
+              </div>
+              <div *ngIf="getRemainingCount(project.employees) > 0" class="employee-chip more-chip"
+                [title]="'+ ' + getRemainingCount(project.employees) + ' more'">
+                <span class="more-count">+{{ getRemainingCount(project.employees) }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Employees Section -->
-      <div class="employees-section">
-        <span class="section-label">Assigned Employees</span>
-        <div class="employees-list">
-          <div *ngFor="let employee of getVisibleEmployees(project.employees)" 
-               class="employee-chip"
-               [title]="employee.name">
-            <span class="employee-initials">{{ employee.initials }}</span>
-            <span class="employee-name">{{ employee.name }}</span>
-          </div>
-          <div *ngIf="getRemainingCount(project.employees) > 0" 
-               class="employee-chip more-chip"
-               [title]="'+ ' + getRemainingCount(project.employees) + ' more'">
-            <span class="more-count">+{{ getRemainingCount(project.employees) }}</span>
-          </div>
+      <!-- Pagination -->
+      <div *ngIf="!isLoading && filteredProjects.length > 0" class="pagination-container">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1" type="button">
+          <i class="fas fa-chevron-left"></i>
+          Previous
+        </button>
+
+        <div class="page-numbers">
+          <button *ngFor="let page of getPageNumbers()" class="page-number-btn" [class.active]="page === currentPage"
+            (click)="goToPage(page)" type="button">
+            {{ page }}
+          </button>
         </div>
+
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages" type="button">
+          Next
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && filteredProjects.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-folder-open"></i>
+        </div>
+        <h2 class="empty-title">No projects available</h2>
+        <p class="empty-description">There are currently no projects to display. Create a new project to get started.
+        </p>
       </div>
     </div>
-  </div>
-
-  <!-- Pagination -->
-  <div *ngIf="!isLoading && filteredProjects.length > 0" class="pagination-container">
-    <button class="pagination-btn" 
-            (click)="previousPage()"
-            [disabled]="currentPage === 1"
-            type="button">
-      <i class="fas fa-chevron-left"></i>
-      Previous
-    </button>
-    
-    <div class="page-numbers">
-      <button *ngFor="let page of getPageNumbers()"
-              class="page-number-btn"
-              [class.active]="page === currentPage"
-              (click)="goToPage(page)"
-              type="button">
-        {{ page }}
-      </button>
-    </div>
-    
-    <button class="pagination-btn" 
-            (click)="nextPage()"
-            [disabled]="currentPage === totalPages"
-            type="button">
-      Next
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
-
-  <!-- Empty State -->
-  <div *ngIf="!isLoading && filteredProjects.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <i class="fas fa-folder-open"></i>
-    </div>
-    <h2 class="empty-title">No projects available</h2>
-    <p class="empty-description">There are currently no projects to display. Create a new project to get started.</p>
-  </div>
-</div>

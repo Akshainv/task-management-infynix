@@ -4,42 +4,28 @@
 <div class="main-content">
   <div class="projects-container">
 
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="header-content">
-        <div class="header-title-section">
-          <div class="title-wrapper">
-            <i class="fas fa-check-circle header-icon"></i>
-            <div>
-              <h1 class="page-title">Completed Tasks</h1>
-              <p class="page-subtitle">View all your completed projects and tasks</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stats Card - Total Completed -->
-        <div class="stats-card-single">
-          <div class="stat-item">
-            <div class="stat-icon-wrapper completed">
-              <i class="fas fa-clipboard-check"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-label">Total Completed</span>
-              <span class="stat-value">{{ projects.length }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Search Bar -->
-      <div class="search-section">
+    <!-- Toolbar Section -->
+    <div class="projects-toolbar">
+      <!-- Search Bar (Left) -->
+      <div class="search-bar-wrapper">
         <div class="search-bar">
           <i class="fas fa-search search-icon"></i>
-          <input type="text" class="search-input" placeholder="Search by project name, client, or location..."
-            [(ngModel)]="searchQuery" (input)="onSearch()">
+          <input type="text" class="search-input" placeholder="Search projects..." [(ngModel)]="searchQuery"
+            (input)="onSearch()">
           <button *ngIf="searchQuery" class="clear-search-btn" (click)="clearSearch()" type="button">
             <i class="fas fa-times"></i>
           </button>
+        </div>
+      </div>
+
+      <!-- Total Completed Badge (Right) -->
+      <div class="total-completed-badge">
+        <div class="badge-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="badge-content">
+          <span class="badge-label">Total Completed</span>
+          <span class="badge-value">{{ projects.length }}</span>
         </div>
       </div>
     </div>

@@ -21,121 +21,24 @@
   min-height: 100vh;
 }
 
-/* ===== PAGE HEADER ===== */
-.page-header {
-  margin-bottom: 2rem;
-}
-
-.header-content {
+/* ===== TOOLBAR SECTION ===== */
+.projects-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
-.header-title-section {
+.search-bar-wrapper {
   flex: 1;
-}
-
-.title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.header-icon {
-  font-size: 2.5rem;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.page-title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #1a202c;
-  margin: 0 0 0.25rem 0;
-  letter-spacing: -0.5px;
-}
-
-.page-subtitle {
-  font-size: 0.938rem;
-  color: #718096;
-  margin: 0;
-  font-weight: 500;
-}
-
-/* ===== STATS CARD ===== */
-.stats-card-single {
-  flex-shrink: 0;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e9ecef;
-  transition: all 0.3s ease;
-  min-width: 200px;
-}
-
-.stat-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-.stat-icon-wrapper.completed {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
-}
-
-.stat-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.stat-label {
-  font-size: 0.813rem;
-  font-weight: 500;
-  color: #718096;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.stat-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1a202c;
-  line-height: 1;
-}
-
-/* ===== SEARCH SECTION ===== */
-.search-section {
-  margin-bottom: 1.5rem;
+  max-width: 320px;
 }
 
 .search-bar {
   position: relative;
-  max-width: 600px;
+  width: 100%;
 }
 
 .search-icon {
@@ -144,18 +47,19 @@
   top: 50%;
   transform: translateY(-50%);
   color: #9ca3af;
-  font-size: 1rem;
+  font-size: 0.95rem;
   pointer-events: none;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.875rem 3rem 0.875rem 3rem;
-  border: 2px solid #e5e7eb;
+  padding: 0.75rem 2.5rem 0.75rem 2.75rem;
+  border: 1px solid #e5e7eb;
   border-radius: 10px;
-  font-size: 0.938rem;
+  font-size: 0.875rem;
   transition: all 0.3s ease;
   background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .search-input:focus {
@@ -173,8 +77,8 @@
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: none;
   background: #f3f4f6;
@@ -184,11 +88,59 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  font-size: 0.8rem;
 }
 
 .clear-search-btn:hover {
   background: #e5e7eb;
   color: #374151;
+}
+
+/* Compact Total Completed Badge (Small & Professional) */
+.total-completed-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  min-width: 180px;
+}
+
+.badge-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+}
+
+.badge-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.badge-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a202c;
+  line-height: 1.2;
 }
 
 /* ===== LOADING STATE ===== */
