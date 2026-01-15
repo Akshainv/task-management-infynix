@@ -145,53 +145,93 @@
         <p class="empty-description">Start by creating your first manager using the form above</p>
       </div>
 
-      <!-- Managers Grid -->
-      <div class="managers-grid" *ngIf="managers.length > 0">
-        <div *ngFor="let manager of managers" class="manager-item-card">
-          
-          <!-- Manager Avatar & Info -->
-          <div class="manager-header">
-            <div class="manager-avatar">
-              {{ manager.name.charAt(0).toUpperCase() }}
-            </div>
-            <div class="manager-info">
-              <h3 class="manager-name">{{ manager.name }}</h3>
-              <p class="manager-email">{{ manager.email }}</p>
-            </div>
-          </div>
+      <!-- Managers Table -->
+      <div class="table-container" *ngIf="managers.length > 0">
+        <table class="managers-table">
+          <thead>
+            <tr>
+              <th class="th-avatar">Manager</th>
+              <th class="th-email">Email</th>
+              <th class="th-company">Company</th>
+              <th class="th-contact">Contact Number</th>
+              <th class="th-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let manager of paginatedManagers" class="table-row">
+              <td class="td-manager">
+                <div class="manager-cell">
+                  <div class="manager-avatar">
+                    {{ manager.name.charAt(0).toUpperCase() }}
+                  </div>
+                  <span class="manager-name">{{ manager.name }}</span>
+                </div>
+              </td>
+              <td class="td-email">
+                <div class="email-cell">
+                  <i class="fas fa-envelope cell-icon"></i>
+                  <span>{{ manager.email }}</span>
+                </div>
+              </td>
+              <td class="td-company">
+                <div class="company-cell">
+                  <i class="fas fa-building cell-icon"></i>
+                  <span>{{ manager.company }}</span>
+                </div>
+              </td>
+              <td class="td-contact">
+                <div class="contact-cell">
+                  <i class="fas fa-phone cell-icon"></i>
+                  <span>{{ manager.contactNumber }}</span>
+                </div>
+              </td>
+              <td class="td-actions">
+                <div class="action-buttons">
+                  <button class="action-btn edit-btn" 
+                          (click)="editManager(manager)"
+                          type="button"
+                          title="Edit Manager">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="action-btn delete-btn" 
+                          (click)="deleteManager(manager.id)"
+                          type="button"
+                          title="Delete Manager">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-          <!-- Manager Details -->
-          <div class="manager-details">
-            <div class="detail-item">
-              <i class="fas fa-envelope detail-icon"></i>
-              <span class="detail-text">{{ manager.email }}</span>
-            </div>
-            <div class="detail-item">
-              <i class="fas fa-building detail-icon"></i>
-              <span class="detail-text">{{ manager.company }}</span>
-            </div>
-            <div class="detail-item">
-              <i class="fas fa-phone detail-icon"></i>
-              <span class="detail-text">{{ manager.contactNumber }}</span>
-            </div>
-          </div>
+      <!-- Pagination -->
+      <div class="pagination-container" *ngIf="managers.length > pageSize">
+        <button class="pagination-btn" 
+                (click)="previousPage()" 
+                [disabled]="currentPage === 1">
+          <i class="fas fa-chevron-left"></i>
+          Previous
+        </button>
 
-          <!-- Action Buttons -->
-          <div class="manager-actions">
-            <button class="action-btn edit-btn" 
-                    (click)="editManager(manager)"
-                    type="button">
-              <i class="fas fa-edit"></i>
-              Edit
-            </button>
-            <button class="action-btn delete-btn" 
-                    (click)="deleteManager(manager.id)"
-                    type="button">
-              <i class="fas fa-trash-alt"></i>
-              Delete
-            </button>
-          </div>
+        <div class="page-numbers">
+          <button *ngFor="let page of getVisiblePages()"
+                  class="page-number-btn"
+                  [class.active]="page === currentPage"
+                  [disabled]="page === '...'"
+                  (click)="goToPage(page)"
+                  type="button">
+            {{ page }}
+          </button>
         </div>
+
+        <button class="pagination-btn" 
+                (click)="nextPage()" 
+                [disabled]="currentPage === totalPages">
+          Next
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
 

@@ -34,12 +34,19 @@ export class AdminManagersComponent {
     { id: 2, name: 'Sarah Johnson', email: 'sarah.j@enterprise.com', company: 'Enterprise Corp', contactNumber: '+91 98765 43210' },
     { id: 3, name: 'Michael Brown', email: 'michael.b@innovation.com', company: 'Innovation Labs', contactNumber: '+44 20 1234 5678' },
     { id: 4, name: 'Priya Sharma', email: 'priya@futuretech.in', company: 'Future Technologies', contactNumber: '+91 81234 56789' },
-    // Add more entries to test pagination...
+    { id: 5, name: 'David Wilson', email: 'david.w@techcorp.com', company: 'Tech Corporation', contactNumber: '+1 555-123-4567' },
+    { id: 6, name: 'Emily Chen', email: 'emily.chen@startups.io', company: 'Startup Ventures', contactNumber: '+86 138 0000 1234' },
+    { id: 7, name: 'Robert Taylor', email: 'robert.t@global.com', company: 'Global Industries', contactNumber: '+44 7700 900123' },
+    { id: 8, name: 'Lisa Anderson', email: 'lisa.a@digital.net', company: 'Digital Solutions', contactNumber: '+1 415-555-0100' },
+    { id: 9, name: 'James Martinez', email: 'james.m@consulting.com', company: 'Elite Consulting', contactNumber: '+34 600 123 456' },
+    { id: 10, name: 'Maria Garcia', email: 'maria.g@innovations.es', company: 'Innovation Group', contactNumber: '+34 91 123 45 67' },
+    { id: 11, name: 'Thomas Lee', email: 'thomas.lee@tech.kr', company: 'Korean Tech Ltd', contactNumber: '+82 10-1234-5678' },
+    { id: 12, name: 'Sophie Martin', email: 'sophie.m@france.fr', company: 'French Solutions', contactNumber: '+33 6 12 34 56 78' },
   ];
 
-  // Pagination
+  // Pagination - 6 items per page
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 6;
 
   get totalPages(): number {
     return Math.ceil(this.managers.length / this.pageSize);
@@ -66,7 +73,6 @@ export class AdminManagersComponent {
 
   /**
    * Returns visible page numbers with ellipsis (...)
-   * Now properly typed as (number | string)[]
    */
   getVisiblePages(): (number | string)[] {
     const total = this.totalPages;
@@ -106,6 +112,9 @@ export class AdminManagersComponent {
       this.managers.push(manager);
       this.resetForm();
       alert('Manager created successfully!');
+      
+      // Navigate to last page to see the new manager
+      this.currentPage = this.totalPages;
     } else {
       alert('Please fill all required fields');
     }

@@ -131,49 +131,86 @@
         <p class="empty-description">Start by creating your first employee using the form above</p>
       </div>
 
-      <!-- Employees Grid -->
-      <div class="employees-grid" *ngIf="employees.length > 0">
-        <div *ngFor="let employee of employees" class="employee-item-card">
-          
-          <!-- Employee Avatar & Info -->
-          <div class="employee-header">
-            <div class="employee-avatar">
-              {{ employee.name.charAt(0).toUpperCase() }}
-            </div>
-            <div class="employee-info">
-              <h3 class="employee-name">{{ employee.name }}</h3>
-              <p class="employee-email">{{ employee.email }}</p>
-            </div>
-          </div>
+      <!-- Employees Table -->
+      <div class="table-container" *ngIf="employees.length > 0">
+        <table class="employees-table">
+          <thead>
+            <tr>
+              <th class="th-avatar">Employee</th>
+              <th class="th-email">Email</th>
+              <th class="th-contact">Contact Number</th>
+              <th class="th-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let employee of paginatedEmployees" class="table-row">
+              <td class="td-employee">
+                <div class="employee-cell">
+                  <div class="employee-avatar">
+                    {{ employee.name.charAt(0).toUpperCase() }}
+                  </div>
+                  <span class="employee-name">{{ employee.name }}</span>
+                </div>
+              </td>
+              <td class="td-email">
+                <div class="email-cell">
+                  <i class="fas fa-envelope cell-icon"></i>
+                  <span>{{ employee.email }}</span>
+                </div>
+              </td>
+              <td class="td-contact">
+                <div class="contact-cell">
+                  <i class="fas fa-phone cell-icon"></i>
+                  <span>{{ employee.contactNumber }}</span>
+                </div>
+              </td>
+              <td class="td-actions">
+                <div class="action-buttons">
+                  <button class="action-btn edit-btn" 
+                          (click)="editEmployee(employee)"
+                          type="button"
+                          title="Edit Employee">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="action-btn delete-btn" 
+                          (click)="deleteEmployee(employee.id)"
+                          type="button"
+                          title="Delete Employee">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-          <!-- Employee Details -->
-          <div class="employee-details">
-            <div class="detail-item">
-              <i class="fas fa-envelope detail-icon"></i>
-              <span class="detail-text">{{ employee.email }}</span>
-            </div>
-            <div class="detail-item">
-              <i class="fas fa-phone detail-icon"></i>
-              <span class="detail-text">{{ employee.contactNumber }}</span>
-            </div>
-          </div>
+      <!-- Pagination -->
+      <div class="pagination-container" *ngIf="employees.length > pageSize">
+        <button class="pagination-btn" 
+                (click)="previousPage()" 
+                [disabled]="currentPage === 1">
+          <i class="fas fa-chevron-left"></i>
+          Previous
+        </button>
 
-          <!-- Action Buttons -->
-          <div class="employee-actions">
-            <button class="action-btn edit-btn" 
-                    (click)="editEmployee(employee)"
-                    type="button">
-              <i class="fas fa-edit"></i>
-              Edit
-            </button>
-            <button class="action-btn delete-btn" 
-                    (click)="deleteEmployee(employee.id)"
-                    type="button">
-              <i class="fas fa-trash-alt"></i>
-              Delete
-            </button>
-          </div>
+        <div class="page-numbers">
+          <button *ngFor="let page of getVisiblePages()"
+                  class="page-number-btn"
+                  [class.active]="page === currentPage"
+                  [disabled]="page === '...'"
+                  (click)="goToPage(page)"
+                  type="button">
+            {{ page }}
+          </button>
         </div>
+
+        <button class="pagination-btn" 
+                (click)="nextPage()" 
+                [disabled]="currentPage === totalPages">
+          Next
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
 
