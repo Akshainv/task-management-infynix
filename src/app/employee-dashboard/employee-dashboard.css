@@ -274,9 +274,9 @@
   color: #F97316;
 }
 
-/* ===== PHOTO SECTION ===== */
+/* ===== PHOTO DISPLAY SECTION ===== */
 .photo-section {
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 auto 32px;
 }
 
@@ -288,110 +288,50 @@
   font-weight: 700;
   color: #1F2937;
   margin: 0 0 20px 0;
+  justify-content: center;
 }
 
 .photo-title i {
   color: #F97316;
 }
 
-.photo-upload-area {
-  border: 2px dashed #D1D5DB;
-  border-radius: 16px;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #FAFBFC 0%, #F9FAFB 100%);
-  transition: all 0.3s ease;
-}
-
-.photo-upload-area:hover {
-  border-color: #F97316;
-  background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
-}
-
-.upload-placeholder {
+.photo-display-area {
   text-align: center;
 }
 
-.placeholder-icon {
-  font-size: 64px;
-  color: #D1D5DB;
-  margin-bottom: 16px;
-}
-
-.upload-text {
-  font-size: 14px;
-  color: #6B7280;
-  margin: 0 0 20px 0;
-  font-weight: 500;
-}
-
-.upload-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.upload-btn,
-.camera-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.upload-btn {
-  background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
-  color: white;
-}
-
-.upload-btn:hover {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
-}
-
-.camera-btn {
-  background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
-  color: white;
-}
-
-.camera-btn:hover {
-  background: linear-gradient(135deg, #EA580C 0%, #C2410C 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
-}
-
-/* ===== PHOTO PREVIEW ===== */
-.photo-preview-area {
-  text-align: center;
-}
-
-.preview-container {
+.photo-display-container {
   position: relative;
   display: inline-block;
   margin-bottom: 16px;
 }
 
-.preview-image {
-  width: 200px;
-  height: 200px;
+.attendance-photo {
+  width: 220px;
+  height: 220px;
   border-radius: 16px;
   object-fit: cover;
-  border: 3px solid #10B981;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 4px solid #10B981;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+  animation: photoFadeIn 0.5s ease-out;
+}
+
+@keyframes photoFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .remove-photo-btn {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 32px;
-  height: 32px;
+  top: -10px;
+  right: -10px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
   background: #EF4444;
@@ -401,27 +341,30 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  z-index: 10;
 }
 
 .remove-photo-btn:hover {
   background: #DC2626;
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(90deg);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
 }
 
-.photo-verified {
+.photo-status {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
   color: #059669;
-  padding: 8px 16px;
+  padding: 10px 18px;
   background: rgba(16, 185, 129, 0.1);
-  border-radius: 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-.photo-verified i {
+.photo-status i {
   font-size: 16px;
 }
 
@@ -429,144 +372,166 @@
 .action-buttons {
   display: flex;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
-.check-in-btn,
-.check-out-btn {
+.clock-in-btn,
+.clock-out-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 16px 32px;
-  border-radius: 12px;
+  gap: 12px;
+  padding: 18px 48px;
+  border-radius: 14px;
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  animation: buttonFadeIn 0.5s ease-out;
 }
 
-.check-in-btn {
+@keyframes buttonFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.clock-in-btn {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: white;
 }
 
-.check-in-btn:hover:not(:disabled) {
+.clock-in-btn:hover {
   background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.5);
 }
 
-.check-out-btn {
+.clock-in-btn:active {
+  transform: translateY(-1px);
+}
+
+.clock-out-btn {
   background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
   color: white;
 }
 
-.check-out-btn:hover:not(:disabled) {
+.clock-out-btn:hover {
   background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(239, 68, 68, 0.5);
 }
 
-.check-in-btn:disabled,
-.check-out-btn:disabled {
-  background: linear-gradient(135deg, #E5E7EB 0%, #D1D5DB 100%);
-  color: #9CA3AF;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+.clock-out-btn:active {
+  transform: translateY(-1px);
 }
 
-.check-in-btn i,
-.check-out-btn i {
-  font-size: 16px;
+.clock-in-btn i,
+.clock-out-btn i {
+  font-size: 18px;
 }
 
-/* ===== STATUS MESSAGE ===== */
-.status-message {
-  text-align: center;
+/* ===== COMPLETION MESSAGE ===== */
+.completion-message {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #6B7280;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  margin-bottom: 24px;
-  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #059669;
+  animation: messageSlideIn 0.5s ease-out;
 }
 
-.status-message i {
-  color: #F97316;
-  font-size: 14px;
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.status-message strong {
-  color: #1F2937;
-  font-weight: 700;
+.completion-message i {
+  font-size: 20px;
 }
 
 /* ===== ATTENDANCE TIMES ===== */
 .attendance-times {
   max-width: 500px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 24px;
   background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .time-entry {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px;
+  gap: 18px;
+  padding: 16px;
   margin-bottom: 12px;
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
 }
 
 .time-entry:last-child {
   margin-bottom: 0;
 }
 
-.time-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+.time-entry:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.time-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
 .check-in-icon {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(16, 185, 129, 0.15);
   color: #10B981;
+  border: 2px solid rgba(16, 185, 129, 0.3);
 }
 
 .check-out-icon {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.15);
   color: #EF4444;
+  border: 2px solid rgba(239, 68, 68, 0.3);
 }
 
 .time-details {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .time-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #6B7280;
   text-transform: uppercase;
@@ -574,10 +539,10 @@
 }
 
 .time-value {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #1F2937;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
 }
 
 /* ============================================
@@ -602,25 +567,25 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
 }
 
 .camera-modal-content {
   position: relative;
   background: white;
-  border-radius: 16px;
-  max-width: 600px;
+  border-radius: 18px;
+  max-width: 650px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
   overflow: hidden;
-  animation: modalSlideIn 0.3s ease-out;
+  animation: modalSlideIn 0.4s ease-out;
 }
 
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-20px) scale(0.95);
+    transform: translateY(-30px) scale(0.95);
   }
   to {
     opacity: 1;
@@ -629,8 +594,8 @@
 }
 
 .camera-modal-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 22px 28px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -640,8 +605,8 @@
 .camera-modal-header h3 {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
+  gap: 12px;
+  font-size: 19px;
   font-weight: 700;
   color: #1F2937;
   margin: 0;
@@ -649,11 +614,12 @@
 
 .camera-modal-header h3 i {
   color: #F97316;
+  font-size: 20px;
 }
 
 .close-modal-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
   background: rgba(0, 0, 0, 0.05);
@@ -666,7 +632,7 @@
 }
 
 .close-modal-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.15);
   color: #EF4444;
   transform: rotate(90deg);
 }
@@ -674,32 +640,38 @@
 .camera-modal-body {
   padding: 0;
   background: #000;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .camera-modal-body video {
   width: 100%;
   height: auto;
-  max-height: 400px;
+  max-height: 450px;
   display: block;
   object-fit: cover;
 }
 
 .camera-modal-footer {
-  padding: 20px 24px;
+  padding: 22px 28px;
   display: flex;
   gap: 12px;
   justify-content: center;
   background: linear-gradient(135deg, #FAFBFC 0%, #F9FAFB 100%);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap;
 }
 
 .capture-btn,
+.upload-file-btn,
 .cancel-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 24px;
-  border-radius: 10px;
+  padding: 13px 26px;
+  border-radius: 11px;
   border: none;
   font-size: 14px;
   font-weight: 600;
@@ -710,12 +682,25 @@
 .capture-btn {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .capture-btn:hover {
   background: linear-gradient(135deg, #059669 0%, #047857 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.upload-file-btn {
+  background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.upload-file-btn:hover {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
 }
 
 .cancel-btn {
@@ -790,34 +775,31 @@
     padding: 24px 16px;
   }
 
-  .photo-upload-area {
-    padding: 30px 16px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .check-in-btn,
-  .check-out-btn {
+  .clock-in-btn,
+  .clock-out-btn {
     width: 100%;
     justify-content: center;
+    padding: 16px 32px;
   }
 
-  .upload-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .upload-btn,
-  .camera-btn {
-    width: 100%;
+  .completion-message {
+    text-align: center;
     justify-content: center;
   }
 
   .camera-modal-content {
     max-width: 100%;
+  }
+
+  .camera-modal-footer {
+    flex-direction: column;
+  }
+
+  .capture-btn,
+  .upload-file-btn,
+  .cancel-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -843,18 +825,24 @@
     padding: 3px 8px;
   }
 
-  .preview-image {
-    width: 160px;
-    height: 160px;
+  .attendance-photo {
+    width: 180px;
+    height: 180px;
+  }
+
+  .clock-in-btn,
+  .clock-out-btn {
+    padding: 14px 28px;
+    font-size: 14px;
   }
 
   .time-value {
-    font-size: 16px;
+    font-size: 18px;
   }
 
-  .status-message {
-    font-size: 12px;
-    padding: 10px 16px;
+  .completion-message {
+    font-size: 14px;
+    padding: 14px 20px;
   }
 }
 

@@ -62,7 +62,6 @@ export class EmployeeDashboardComponent implements OnInit {
 
   selectedFile: File | null = null;
   photoPreview: string | null = null;
-  showCamera: boolean = false;
   videoStream: MediaStream | null = null;
   showCameraModal: boolean = false;
 
@@ -70,13 +69,10 @@ export class EmployeeDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDashboardData();
-    // Note: Attendance state is now maintained in memory only
-    // Data will reset on page refresh (this is expected behavior without localStorage)
   }
 
   loadDashboardData(): void {
     console.log('Employee dashboard data loaded');
-    // Load employee-specific data here
   }
 
   onCardClick(route?: string): void {
@@ -129,7 +125,6 @@ export class EmployeeDashboardComponent implements OnInit {
     this.showCameraModal = true;
     
     try {
-      // Request camera access
       this.videoStream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
           facingMode: 'user',
@@ -138,7 +133,6 @@ export class EmployeeDashboardComponent implements OnInit {
         } 
       });
       
-      // Wait for DOM to update
       setTimeout(() => {
         const videoElement = document.getElementById('cameraVideo') as HTMLVideoElement;
         if (videoElement && this.videoStream) {
@@ -165,7 +159,6 @@ export class EmployeeDashboardComponent implements OnInit {
       if (context) {
         context.drawImage(videoElement, 0, 0);
         
-        // Convert canvas to blob and then to data URL
         canvas.toBlob((blob) => {
           if (blob) {
             const reader = new FileReader();
@@ -191,7 +184,12 @@ export class EmployeeDashboardComponent implements OnInit {
 
   checkIn(): void {
     if (!this.attendanceStatus.photoUploaded) {
-      alert('Please upload a photo for verification before checking in');
+      // Open camera/upload modal when clicking Clock In without photo
+      this.showCameraModal = true;
+      this.openCamera().catch(() => {
+        // If camera fails, just show the modal for file upload
+        this.showCameraModal = true;
+      });
       return;
     }
 
@@ -223,19 +221,14 @@ export class EmployeeDashboardComponent implements OnInit {
   }
 
   removePhoto(): void {
-    if (this.attendanceStatus.isCheckedIn) {
-      if (!confirm('Removing photo will reset your attendance. Continue?')) {
-        return;
-      }
-      // Reset attendance if photo is removed after check-in
+    if (confirm('Are you sure you want to remove the photo? This will reset your attendance.')) {
+      this.selectedFile = null;
+      this.photoPreview = null;
+      this.attendanceStatus.photoUploaded = false;
       this.attendanceStatus.isCheckedIn = false;
       this.attendanceStatus.checkInTime = null;
       this.attendanceStatus.checkOutTime = null;
     }
-    
-    this.selectedFile = null;
-    this.photoPreview = null;
-    this.attendanceStatus.photoUploaded = false;
   }
 
   getCurrentStatus(): string {
@@ -259,7 +252,6 @@ export class EmployeeDashboardComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // Clean up camera stream if component is destroyed
     this.closeCamera();
   }
 }

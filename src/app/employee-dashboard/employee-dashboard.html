@@ -56,93 +56,83 @@
           <div class="attendance-instructions">
             <p class="instruction-text">
               <i class="fas fa-info-circle"></i>
-              Mark your attendance to start your workday
+              {{ attendanceStatus.isCheckedIn ? 'Clock out when you finish your workday' : 'Click Clock In to start your workday' }}
             </p>
           </div>
 
-          <!-- Photo Upload Section -->
-          <div class="photo-section">
+          <!-- Photo Display Section (Always visible after photo is taken) -->
+          <div class="photo-section" *ngIf="photoPreview">
             <h3 class="photo-title">
               <i class="fas fa-camera"></i>
-              Photo Verification
+              Attendance Photo
             </h3>
 
-            <div class="photo-upload-area" *ngIf="!photoPreview">
-              <div class="upload-placeholder">
-                <i class="fas fa-user-circle placeholder-icon"></i>
-                <p class="upload-text">Upload your photo for verification</p>
-                <div class="upload-buttons">
-                  <button type="button" class="upload-btn" (click)="triggerFileInput()">
-                    <i class="fas fa-upload"></i>
-                    Choose File
-                  </button>
-                  <button type="button" class="camera-btn" (click)="openCamera()">
-                    <i class="fas fa-camera"></i>
-                    Take Photo
-                  </button>
-                </div>
-                <input type="file" id="photoUpload" accept="image/*" (change)="onFileSelected($event)"
-                  style="display: none;">
-              </div>
-            </div>
-
-            <!-- Photo Preview -->
-            <div class="photo-preview-area" *ngIf="photoPreview">
-              <div class="preview-container">
-                <img [src]="photoPreview" alt="Attendance Photo" class="preview-image">
-                <button type="button" class="remove-photo-btn" (click)="removePhoto()" title="Remove photo">
+            <div class="photo-display-area">
+              <div class="photo-display-container">
+                <img [src]="photoPreview" alt="Attendance Photo" class="attendance-photo">
+                <button type="button" 
+                        class="remove-photo-btn" 
+                        (click)="removePhoto()" 
+                        title="Remove photo and reset attendance">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
-              <p class="photo-verified">
+              <p class="photo-status">
                 <i class="fas fa-check-circle"></i>
-                Photo verified and ready
+                Photo captured successfully
               </p>
             </div>
           </div>
 
-          <!-- Action Buttons -->
+          <!-- Clock In/Out Action Button -->
           <div class="action-buttons">
-            <button type="button" class="check-in-btn"
-              [disabled]="attendanceStatus.isCheckedIn || !attendanceStatus.photoUploaded" 
-              (click)="checkIn()"
-              [title]="!attendanceStatus.photoUploaded ? 'Please upload photo first' : (attendanceStatus.isCheckedIn ? 'Already checked in' : 'Click to check in')">
+            <!-- Clock In Button (Show only when NOT checked in) -->
+            <button type="button" 
+                    class="clock-in-btn"
+                    *ngIf="!attendanceStatus.isCheckedIn"
+                    (click)="checkIn()">
               <i class="fas fa-sign-in-alt"></i>
-              <span>CHECK IN</span>
+              <span>CLOCK IN</span>
             </button>
 
-            <button type="button" class="check-out-btn"
-              [disabled]="!attendanceStatus.isCheckedIn || attendanceStatus.checkOutTime" 
-              (click)="checkOut()"
-              [title]="!attendanceStatus.isCheckedIn ? 'Check in first' : (attendanceStatus.checkOutTime ? 'Already checked out' : 'Click to check out')">
+            <!-- Clock Out Button (Show only when checked in and NOT checked out) -->
+            <button type="button" 
+                    class="clock-out-btn"
+                    *ngIf="attendanceStatus.isCheckedIn && !attendanceStatus.checkOutTime"
+                    (click)="checkOut()">
               <i class="fas fa-sign-out-alt"></i>
-              <span>CHECK OUT</span>
+              <span>CLOCK OUT</span>
             </button>
-          </div>
 
-          <!-- Status Message -->
-          <div class="status-message">
-            <i class="fas fa-exclamation-circle"></i>
-            <span>Photo verification required when checking in • Current Status: <strong>{{ getCurrentStatus() }}</strong></span>
+            <!-- Completion Message (Show after clocked out) -->
+            <div class="completion-message" *ngIf="attendanceStatus.checkOutTime">
+              <i class="fas fa-check-double"></i>
+              <span>Attendance marked for today. Have a great day!</span>
+            </div>
           </div>
 
           <!-- Attendance Times Display -->
           <div class="attendance-times" *ngIf="attendanceStatus.checkInTime">
             <div class="time-entry">
-              <i class="fas fa-sign-in-alt time-icon check-in-icon"></i>
+              <div class="time-icon-wrapper check-in-icon">
+                <i class="fas fa-sign-in-alt"></i>
+              </div>
               <div class="time-details">
-                <span class="time-label">Check In Time</span>
+                <span class="time-label">Clock In Time</span>
                 <span class="time-value">{{ attendanceStatus.checkInTime }}</span>
               </div>
             </div>
             <div class="time-entry" *ngIf="attendanceStatus.checkOutTime">
-              <i class="fas fa-sign-out-alt time-icon check-out-icon"></i>
+              <div class="time-icon-wrapper check-out-icon">
+                <i class="fas fa-sign-out-alt"></i>
+              </div>
               <div class="time-details">
-                <span class="time-label">Check Out Time</span>
+                <span class="time-label">Clock Out Time</span>
                 <span class="time-value">{{ attendanceStatus.checkOutTime }}</span>
               </div>
             </div>
           </div>
+
         </div>
 
       </div>
@@ -151,14 +141,14 @@
   </div>
 </div>
 
-<!-- Camera Modal -->
+<!-- Camera/Upload Modal -->
 <div class="camera-modal" *ngIf="showCameraModal">
   <div class="camera-modal-overlay" (click)="closeCamera()"></div>
   <div class="camera-modal-content">
     <div class="camera-modal-header">
       <h3>
         <i class="fas fa-camera"></i>
-        Take Your Photo
+        Capture Attendance Photo
       </h3>
       <button type="button" class="close-modal-btn" (click)="closeCamera()">
         <i class="fas fa-times"></i>
@@ -172,6 +162,10 @@
         <i class="fas fa-camera"></i>
         Capture Photo
       </button>
+      <button type="button" class="upload-file-btn" (click)="triggerFileInput()">
+        <i class="fas fa-upload"></i>
+        Upload File
+      </button>
       <button type="button" class="cancel-btn" (click)="closeCamera()">
         <i class="fas fa-times"></i>
         Cancel
@@ -179,3 +173,10 @@
     </div>
   </div>
 </div>
+
+<!-- Hidden file input -->
+<input type="file" 
+       id="photoUpload" 
+       accept="image/*" 
+       (change)="onFileSelected($event)"
+       style="display: none;">
