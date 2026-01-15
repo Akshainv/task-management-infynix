@@ -3,34 +3,6 @@
 
 <div class="main-content">
   <div class="managers-container">
-    
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="header-content">
-        <div class="header-title-section">
-          <div class="title-wrapper">
-            <i class="fas fa-user-tie header-icon"></i>
-            <div>
-              <h1 class="page-title">Manager Management</h1>
-              <p class="page-subtitle">Create and manage manager accounts</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stats Card - Total Managers -->
-        <div class="stats-card-single">
-          <div class="stat-item">
-            <div class="stat-icon-wrapper total">
-              <i class="fas fa-users-cog"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-label">Total Managers</span>
-              <span class="stat-value">{{ managers.length }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Create Manager Card -->
     <div class="manager-card create-manager-card">
@@ -40,20 +12,15 @@
           Create New Manager
         </h2>
       </div>
-      
+
       <form class="manager-form" (ngSubmit)="createManager()">
         <div class="form-grid">
           <div class="form-group">
             <label for="managerName">Manager Name</label>
             <div class="input-wrapper">
               <i class="fas fa-user input-icon"></i>
-              <input 
-                type="text" 
-                id="managerName"
-                [(ngModel)]="newManager.name"
-                name="name"
-                placeholder="Enter full name"
-                required>
+              <input type="text" id="managerName" [(ngModel)]="newManager.name" name="name"
+                placeholder="Enter full name" required>
             </div>
           </div>
 
@@ -61,13 +28,8 @@
             <label for="email">Email Address</label>
             <div class="input-wrapper">
               <i class="fas fa-envelope input-icon"></i>
-              <input 
-                type="email" 
-                id="email"
-                [(ngModel)]="newManager.email"
-                name="email"
-                placeholder="manager@company.com"
-                required>
+              <input type="email" id="email" [(ngModel)]="newManager.email" name="email"
+                placeholder="manager@company.com" required>
             </div>
           </div>
 
@@ -75,13 +37,8 @@
             <label for="password">Password</label>
             <div class="input-wrapper">
               <i class="fas fa-lock input-icon"></i>
-              <input 
-                type="password" 
-                id="password"
-                [(ngModel)]="newManager.password"
-                name="password"
-                placeholder="••••••••"
-                required>
+              <input type="password" id="password" [(ngModel)]="newManager.password" name="password"
+                placeholder="••••••••" required>
             </div>
           </div>
 
@@ -89,13 +46,8 @@
             <label for="company">Company</label>
             <div class="input-wrapper">
               <i class="fas fa-building input-icon"></i>
-              <input 
-                type="text" 
-                id="company"
-                [(ngModel)]="newManager.company"
-                name="company"
-                placeholder="Enter company name"
-                required>
+              <input type="text" id="company" [(ngModel)]="newManager.company" name="company"
+                placeholder="Enter company name" required>
             </div>
           </div>
 
@@ -103,13 +55,8 @@
             <label for="contactNumber">Contact Number</label>
             <div class="input-wrapper">
               <i class="fas fa-phone input-icon"></i>
-              <input 
-                type="tel" 
-                id="contactNumber"
-                [(ngModel)]="newManager.contactNumber"
-                name="contactNumber"
-                placeholder="+91 98765 43210"
-                required>
+              <input type="tel" id="contactNumber" [(ngModel)]="newManager.contactNumber" name="contactNumber"
+                placeholder="+91 98765 43210" required>
             </div>
           </div>
         </div>
@@ -134,6 +81,10 @@
           <i class="fas fa-list"></i>
           Managers List
         </h2>
+        <div class="total-managers-badge">
+          <i class="fas fa-users"></i>
+          <span>Total: {{ managers.length }}</span>
+        </div>
       </div>
 
       <!-- Empty State -->
@@ -187,16 +138,11 @@
               </td>
               <td class="td-actions">
                 <div class="action-buttons">
-                  <button class="action-btn edit-btn" 
-                          (click)="editManager(manager)"
-                          type="button"
-                          title="Edit Manager">
+                  <button class="action-btn edit-btn" (click)="editManager(manager)" type="button" title="Edit Manager">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button class="action-btn delete-btn" 
-                          (click)="deleteManager(manager.id)"
-                          type="button"
-                          title="Delete Manager">
+                  <button class="action-btn delete-btn" (click)="deleteManager(manager.id)" type="button"
+                    title="Delete Manager">
                     <i class="fas fa-trash-alt"></i>
                   </button>
                 </div>
@@ -208,27 +154,19 @@
 
       <!-- Pagination -->
       <div class="pagination-container" *ngIf="managers.length > pageSize">
-        <button class="pagination-btn" 
-                (click)="previousPage()" 
-                [disabled]="currentPage === 1">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
           <i class="fas fa-chevron-left"></i>
           Previous
         </button>
 
         <div class="page-numbers">
-          <button *ngFor="let page of getVisiblePages()"
-                  class="page-number-btn"
-                  [class.active]="page === currentPage"
-                  [disabled]="page === '...'"
-                  (click)="goToPage(page)"
-                  type="button">
+          <button *ngFor="let page of getVisiblePages()" class="page-number-btn" [class.active]="page === currentPage"
+            [disabled]="page === '...'" (click)="goToPage(page)" type="button">
             {{ page }}
           </button>
         </div>
 
-        <button class="pagination-btn" 
-                (click)="nextPage()" 
-                [disabled]="currentPage === totalPages">
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
           Next
           <i class="fas fa-chevron-right"></i>
         </button>

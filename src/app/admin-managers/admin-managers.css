@@ -10,7 +10,7 @@
   width: calc(100% - 280px);
 }
 
-:host ::ng-deep .sidebar.collapsed ~ .main-content {
+:host ::ng-deep .sidebar.collapsed~.main-content {
   margin-left: 80px;
   width: calc(100% - 80px);
 }
@@ -21,111 +21,22 @@
   min-height: 100vh;
 }
 
-/* ===== PAGE HEADER ===== */
-.page-header {
-  margin-bottom: 2rem;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
+/* Total Managers Badge in Card Header */
+.total-managers-badge {
+  display: inline-flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
+  gap: 8px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
+  color: #6366f1;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid rgba(99, 102, 241, 0.1);
 }
 
-.header-title-section {
-  flex: 1;
-}
-
-.title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.header-icon {
-  font-size: 2.5rem;
-  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.page-title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #1a202c;
-  margin: 0 0 0.25rem 0;
-  letter-spacing: -0.5px;
-}
-
-.page-subtitle {
-  font-size: 0.938rem;
-  color: #718096;
-  margin: 0;
-  font-weight: 500;
-}
-
-/* ===== STATS CARD ===== */
-.stats-card-single {
-  flex-shrink: 0;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e9ecef;
-  transition: all 0.3s ease;
-  min-width: 200px;
-}
-
-.stat-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-.stat-icon-wrapper.total {
-  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-  color: #ffffff;
-}
-
-.stat-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.stat-label {
-  font-size: 0.813rem;
-  font-weight: 500;
-  color: #718096;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.stat-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1a202c;
-  line-height: 1;
+.total-managers-badge i {
+  font-size: 0.875rem;
 }
 
 /* ===== MANAGER CARDS ===== */
@@ -139,8 +50,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .card-header {
@@ -618,6 +536,7 @@
 }
 
 @media (max-width: 640px) {
+
   /* Stack table as cards on very small screens */
   .table-container {
     padding: 0;

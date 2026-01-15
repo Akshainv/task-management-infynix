@@ -3,34 +3,6 @@
 
 <div class="main-content">
   <div class="employees-container">
-    
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="header-content">
-        <div class="header-title-section">
-          <div class="title-wrapper">
-            <i class="fas fa-users header-icon"></i>
-            <div>
-              <h1 class="page-title">Employee Management</h1>
-              <p class="page-subtitle">Create and manage employee accounts</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stats Card - Total Employees -->
-        <div class="stats-card-single">
-          <div class="stat-item">
-            <div class="stat-icon-wrapper total">
-              <i class="fas fa-user-friends"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-label">Total Employees</span>
-              <span class="stat-value">{{ employees.length }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Create Employee Card -->
     <div class="employee-card create-employee-card">
@@ -40,20 +12,15 @@
           Create New Employee
         </h2>
       </div>
-      
+
       <form class="employee-form" (ngSubmit)="createEmployee()">
         <div class="form-grid">
           <div class="form-group">
             <label for="employeeName">Employee Name</label>
             <div class="input-wrapper">
               <i class="fas fa-user input-icon"></i>
-              <input 
-                type="text" 
-                id="employeeName"
-                [(ngModel)]="newEmployee.name"
-                name="name"
-                placeholder="Enter full name"
-                required>
+              <input type="text" id="employeeName" [(ngModel)]="newEmployee.name" name="name"
+                placeholder="Enter full name" required>
             </div>
           </div>
 
@@ -61,13 +28,8 @@
             <label for="email">Email Address</label>
             <div class="input-wrapper">
               <i class="fas fa-envelope input-icon"></i>
-              <input 
-                type="email" 
-                id="email"
-                [(ngModel)]="newEmployee.email"
-                name="email"
-                placeholder="employee@company.com"
-                required>
+              <input type="email" id="email" [(ngModel)]="newEmployee.email" name="email"
+                placeholder="employee@company.com" required>
             </div>
           </div>
 
@@ -75,13 +37,8 @@
             <label for="password">Password</label>
             <div class="input-wrapper">
               <i class="fas fa-lock input-icon"></i>
-              <input 
-                type="password" 
-                id="password"
-                [(ngModel)]="newEmployee.password"
-                name="password"
-                placeholder="••••••••"
-                required>
+              <input type="password" id="password" [(ngModel)]="newEmployee.password" name="password"
+                placeholder="••••••••" required>
             </div>
           </div>
 
@@ -89,13 +46,8 @@
             <label for="contactNumber">Contact Number</label>
             <div class="input-wrapper">
               <i class="fas fa-phone input-icon"></i>
-              <input 
-                type="tel" 
-                id="contactNumber"
-                [(ngModel)]="newEmployee.contactNumber"
-                name="contactNumber"
-                placeholder="+91 98765 43210"
-                required>
+              <input type="tel" id="contactNumber" [(ngModel)]="newEmployee.contactNumber" name="contactNumber"
+                placeholder="+91 98765 43210" required>
             </div>
           </div>
         </div>
@@ -120,6 +72,10 @@
           <i class="fas fa-list"></i>
           Employees List
         </h2>
+        <div class="total-employees-badge">
+          <i class="fas fa-users"></i>
+          <span>Total: {{ employees.length }}</span>
+        </div>
       </div>
 
       <!-- Empty State -->
@@ -166,16 +122,12 @@
               </td>
               <td class="td-actions">
                 <div class="action-buttons">
-                  <button class="action-btn edit-btn" 
-                          (click)="editEmployee(employee)"
-                          type="button"
-                          title="Edit Employee">
+                  <button class="action-btn edit-btn" (click)="editEmployee(employee)" type="button"
+                    title="Edit Employee">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button class="action-btn delete-btn" 
-                          (click)="deleteEmployee(employee.id)"
-                          type="button"
-                          title="Delete Employee">
+                  <button class="action-btn delete-btn" (click)="deleteEmployee(employee.id)" type="button"
+                    title="Delete Employee">
                     <i class="fas fa-trash-alt"></i>
                   </button>
                 </div>
@@ -187,27 +139,19 @@
 
       <!-- Pagination -->
       <div class="pagination-container" *ngIf="employees.length > pageSize">
-        <button class="pagination-btn" 
-                (click)="previousPage()" 
-                [disabled]="currentPage === 1">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
           <i class="fas fa-chevron-left"></i>
           Previous
         </button>
 
         <div class="page-numbers">
-          <button *ngFor="let page of getVisiblePages()"
-                  class="page-number-btn"
-                  [class.active]="page === currentPage"
-                  [disabled]="page === '...'"
-                  (click)="goToPage(page)"
-                  type="button">
+          <button *ngFor="let page of getVisiblePages()" class="page-number-btn" [class.active]="page === currentPage"
+            [disabled]="page === '...'" (click)="goToPage(page)" type="button">
             {{ page }}
           </button>
         </div>
 
-        <button class="pagination-btn" 
-                (click)="nextPage()" 
-                [disabled]="currentPage === totalPages">
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
           Next
           <i class="fas fa-chevron-right"></i>
         </button>
