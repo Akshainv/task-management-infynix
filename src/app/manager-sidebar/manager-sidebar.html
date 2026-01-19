@@ -1,0 +1,142 @@
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" [class.active]="isOverlayActive" (click)="closeMobileMenu()"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar" #sidebarElement [class.mobile-open]="isMobileMenuOpen" [class.collapsed]="isSidebarCollapsed">
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <div class="logo-small">
+        <img src="assets/images/infynix-logo-removebg-preview.png" alt="Task Flow Logo" />
+      </div>
+      <div class="sidebar-title-container">
+        <h3 class="sidebar-title">Task Flow</h3>
+        <span class="sidebar-subtitle">Manager Portal</span>
+      </div>
+    </div>
+    <button class="toggle-btn" 
+            id="toggleBtn" 
+            aria-label="Toggle Sidebar"
+            type="button"
+            (click)="toggleSidebarCollapse()">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <!-- Main Section -->
+    <span class="nav-section">Main</span>
+    
+    <!-- Dashboard Menu -->
+    <a routerLink="/manager/dashboard" 
+       routerLinkActive="active" 
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-link" 
+       title="Dashboard"
+       data-tooltip="Dashboard">
+      <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+      <span class="nav-text">Dashboard</span>
+    </a>
+
+    <!-- Divider -->
+    <hr class="nav-divider">
+
+    <!-- Management Section -->
+    <span class="nav-section">Management</span>
+
+    <!-- Projects Menu -->
+    <a routerLink="/manager/projects" 
+       routerLinkActive="active" 
+       class="nav-link" 
+       title="Projects"
+       data-tooltip="Projects">
+      <span class="nav-icon"><i class="fas fa-project-diagram"></i></span>
+      <span class="nav-text">Projects</span>
+    </a>
+
+    <!-- Team Menu -->
+    <a routerLink="/manager/team" 
+       routerLinkActive="active" 
+       class="nav-link" 
+       title="Team"
+       data-tooltip="Team">
+      <span class="nav-icon"><i class="fas fa-users"></i></span>
+      <span class="nav-text">Team</span>
+    </a>
+
+    <!-- Divider -->
+    <hr class="nav-divider">
+
+    <!-- Communication & Data Section -->
+    <span class="nav-section">Communication & Data</span>
+
+    <!-- Request Service Menu -->
+    <a routerLink="/manager/request-service" 
+       routerLinkActive="active" 
+       class="nav-link" 
+       title="Request Service"
+       data-tooltip="Request Service">
+      <span class="nav-icon"><i class="fas fa-paper-plane"></i></span>
+      <span class="nav-text">Request Service</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="javascript:void(0)" 
+       class="logout-link" 
+       title="Logout"
+       data-tooltip="Logout"
+       (click)="logout()">
+      <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+      <span class="nav-text">Logout</span>
+    </a>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <button class="menu-toggle" 
+            id="menuToggle" 
+            aria-label="Toggle Menu"
+            type="button"
+            (click)="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" 
+             class="search-input" 
+             placeholder="Search..."
+             aria-label="Search">
+    </div>
+  </div>
+  
+  <div class="header-right">
+    <button class="icon-button" 
+            (click)="navigateToNotifications()" 
+            title="Notifications"
+            type="button">
+      <i class="fas fa-bell"></i>
+      <span class="notification-badge">3</span>
+    </button>
+    
+    <!-- Powered By Section -->
+    <div class="powered-by">
+      <span class="powered-text">Powered by</span>
+      <div class="company-logo">
+        <img src="assets/images/infynix-logo-removebg-preview.png" alt="Company Logo" />
+      </div>
+    </div>
+    
+    <div class="user-profile">
+      <div class="user-avatar">
+        <div class="user-avatar-placeholder">M</div>
+      </div>
+      <div class="user-info-text">
+        <span class="user-name">Manager</span>
+        <span class="user-role">Project Manager</span>
+      </div>
+    </div>
+  </div>
+</div>

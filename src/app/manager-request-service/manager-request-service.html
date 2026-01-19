@@ -1,0 +1,184 @@
+<!-- Include Manager Sidebar (Same as Dashboard) -->
+<app-manager-sidebar></app-manager-sidebar>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="request-service-container">
+
+
+
+    <!-- Request Form Card -->
+    <div class="form-card">
+      <div class="form-header">
+        <div class="form-header-icon">
+          <i class="fas fa-edit"></i>
+        </div>
+        <div>
+          <h2 class="form-title">New Service Request</h2>
+          <p class="form-subtitle">Fill out the form below to send a request to the administration team</p>
+        </div>
+      </div>
+
+      <div class="form-body">
+        <!-- Error Alert -->
+        <div class="alert alert-error" *ngIf="showError">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Request Type Selection -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-tag"></i>
+            Request Type
+          </label>
+          <div class="request-type-grid">
+            <div class="type-option" [class.active]="requestType === 'info'" (click)="requestType = 'info'"
+              data-type="info">
+              <div class="type-option-icon">
+                <i class="fas fa-info-circle"></i>
+              </div>
+              <div class="type-option-content">
+                <span class="type-option-title">{{ getTypeLabel('info') }}</span>
+                <span class="type-option-desc">{{ getTypeDescription('info') }}</span>
+              </div>
+              <div class="type-option-check">
+                <i class="fas fa-check-circle"></i>
+              </div>
+            </div>
+
+            <div class="type-option" [class.active]="requestType === 'warning'" (click)="requestType = 'warning'"
+              data-type="warning">
+              <div class="type-option-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="type-option-content">
+                <span class="type-option-title">{{ getTypeLabel('warning') }}</span>
+                <span class="type-option-desc">{{ getTypeDescription('warning') }}</span>
+              </div>
+              <div class="type-option-check">
+                <i class="fas fa-check-circle"></i>
+              </div>
+            </div>
+
+            <div class="type-option" [class.active]="requestType === 'error'" (click)="requestType = 'error'"
+              data-type="error">
+              <div class="type-option-icon">
+                <i class="fas fa-times-circle"></i>
+              </div>
+              <div class="type-option-content">
+                <span class="type-option-title">{{ getTypeLabel('error') }}</span>
+                <span class="type-option-desc">{{ getTypeDescription('error') }}</span>
+              </div>
+              <div class="type-option-check">
+                <i class="fas fa-check-circle"></i>
+              </div>
+            </div>
+
+            <div class="type-option" [class.active]="requestType === 'success'" (click)="requestType = 'success'"
+              data-type="success">
+              <div class="type-option-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="type-option-content">
+                <span class="type-option-title">{{ getTypeLabel('success') }}</span>
+                <span class="type-option-desc">{{ getTypeDescription('success') }}</span>
+              </div>
+              <div class="type-option-check">
+                <i class="fas fa-check-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-comment-alt"></i>
+            Your Message
+          </label>
+          <textarea class="form-textarea" [(ngModel)]="requestMessage"
+            placeholder="Describe your service request in detail..." rows="6" maxlength="500"></textarea>
+          <div class="character-count">
+            {{ requestMessage.length }}/500 characters
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            <i class="fas fa-times"></i>
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" (click)="sendRequest()">
+            <i class="fas fa-paper-plane"></i>
+            Send Request
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sent Requests History -->
+    <div class="history-section" *ngIf="sentRequests.length > 0">
+      <div class="history-header">
+        <div class="history-title-wrapper">
+          <i class="fas fa-history"></i>
+          <h2 class="history-title">Request History</h2>
+        </div>
+        <button class="btn btn-clear-all" (click)="clearAllRequests()">
+          <i class="fas fa-trash-alt"></i>
+          Clear All
+        </button>
+      </div>
+
+      <div class="requests-card">
+        <div class="requests-list">
+          <div *ngFor="let request of sentRequests" class="request-item">
+
+            <!-- Request Icon -->
+            <div class="request-icon-wrapper" [attr.data-type]="request.type">
+              <i class="fas" [ngClass]="getRequestIcon(request.type)"></i>
+            </div>
+
+            <!-- Request Content -->
+            <div class="request-content">
+              <div class="request-header-row">
+                <div class="request-type-tag" [attr.data-type]="request.type">
+                  <i class="fas fa-tag"></i>
+                  <span>{{ getTypeLabel(request.type) }}</span>
+                </div>
+                <div class="request-timestamp">
+                  <i class="fas fa-clock"></i>
+                  {{ request.timestamp }}
+                </div>
+              </div>
+
+              <p class="request-message">{{ request.message }}</p>
+
+              <div class="request-status-badge" [class.status-sent]="request.status === 'sent'">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ request.status | titlecase }}</span>
+              </div>
+            </div>
+
+            <!-- Delete Button -->
+            <button class="action-btn delete-btn" (click)="deleteRequest(request.id)" type="button"
+              title="Delete request">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State for History -->
+    <div class="empty-history" *ngIf="sentRequests.length === 0">
+      <div class="empty-icon">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <h3 class="empty-title">No Request History</h3>
+      <p class="empty-description">Your sent service requests will appear here</p>
+    </div>
+
+  </div>
+</div>

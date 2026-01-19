@@ -1,0 +1,527 @@
+<!-- manager-projects.html -->
+<app-manager-sidebar></app-manager-sidebar>
+<div class="main-content">
+  <div class="projects-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-title-section">
+          <div class="title-wrapper">
+            <i class="fas fa-project-diagram header-icon"></i>
+            <div>
+              <h1 class="page-title">All Projects</h1>
+              <p class="page-subtitle">Manage and track your projects</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="stats-card-single">
+          <div class="stat-item">
+            <div class="stat-icon-wrapper total">
+              <i class="fas fa-folder-open"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-label">Total Projects</span>
+              <span class="stat-value">{{ projects.length }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search projects..." [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()">
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="filter-container">
+        <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="setFilter('all')" type="button">
+          <i class="fas fa-th"></i>
+          All Projects
+        </button>
+        <button class="filter-btn" [class.active]="activeFilter === 'active'" (click)="setFilter('active')"
+          type="button">
+          <i class="fas fa-spinner"></i>
+          In Progress
+        </button>
+        <button class="filter-btn" [class.active]="activeFilter === 'completed'" (click)="setFilter('completed')"
+          type="button">
+          <i class="fas fa-check-circle"></i>
+          Completed
+        </button>
+        <button class="filter-btn" [class.active]="activeFilter === 'hold'" (click)="setFilter('hold')" type="button">
+          <i class="fas fa-pause-circle"></i>
+          On Hold
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loader"></div>
+      <p>Loading projects...</p>
+    </div>
+
+    <!-- Projects Grid -->
+    <div *ngIf="!isLoading && paginatedProjects.length > 0" class="projects-grid">
+      <div *ngFor="let project of paginatedProjects" class="project-card"
+        [ngClass]="'project-card-' + (project.color || 'blue')" (click)="openProjectDetails(project)">
+
+        <!-- Card Header -->
+        <div class="card-header">
+          <div class="project-icon-wrapper">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <button class="card-menu-btn" (click)="$event.stopPropagation(); openProjectDetails(project)" type="button">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div>
+
+        <!-- Project Info -->
+        <div class="project-info">
+          <h3 class="project-name">{{ project.name }}</h3>
+          <p class="project-category">{{ project.category | titlecase }}</p>
+          <p class="project-desc">{{ project.description }}</p>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="status-section">
+          <span class="status-badge" [ngClass]="getStatusClass(project.status)">
+            {{ getStatusLabel(project.status) }}
+          </span>
+        </div>
+
+        <!-- Details Section -->
+        <div class="details-section">
+          <div class="detail-item">
+            <i class="fas fa-phone"></i>
+            <span>{{ project.clientPhone }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ project.location }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-calendar"></i>
+            <span>Due: {{ formatDate(project.dueDate) }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-users"></i>
+            <div class="assigned-team">
+              <span *ngFor="let user of project.assignedUsers.slice(0,3)" class="mini-avatar">{{ user.initials }}</span>
+              <span *ngIf="project.assignedUsers.length > 3" class="more-count">+{{ project.assignedUsers.length - 3
+                }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+          <div class="progress-header">
+            <span class="progress-label">Progress</span>
+            <span class="progress-percentage">{{ project.progress }}%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" [style.width.%]="project.progress"></div>
+          </div>
+          <div class="task-stats">
+            <span>{{ project.inProgress }} tasks active</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-actions">
+          <button class="action-btn" (click)="$event.stopPropagation(); openProjectDetails(project)" type="button">
+            <i class="fas fa-eye"></i> View Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && filteredProjects.length > 0" class="pagination-container">
+      <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1" type="button">
+        <i class="fas fa-chevron-left"></i>
+        Previous
+      </button>
+
+      <div class="page-numbers">
+        <button *ngFor="let page of getPageNumbers()" class="page-number-btn" [class.active]="page === currentPage"
+          (click)="goToPage(page)" type="button">
+          {{ page }}
+        </button>
+      </div>
+
+      <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages" type="button">
+        Next
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredProjects.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-project-diagram"></i>
+      </div>
+      <h2 class="empty-title">No projects found</h2>
+      <p class="empty-description">{{ searchQuery ? 'Try adjusting your search or filters' : 'Create your first
+        project to get started' }}</p>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button class="fab" (click)="openCreateProjectModal()" type="button">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Create Project Modal -->
+<div class="modal-overlay" *ngIf="showCreateProjectModal" (click)="closeCreateProjectModal()">
+  <div class="modal-content modal-content-large" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create New Project</h2>
+      <p class="modal-subtitle">Enter the details of your upcoming project</p>
+    </div>
+
+    <form class="modal-form" (submit)="$event.preventDefault(); createProject()">
+      <div class="form-grid">
+        <!-- Project Name -->
+        <div class="form-group">
+          <label class="form-label">Project Name <span class="required">*</span></label>
+          <div class="input-with-icon">
+            <i class="fas fa-project-diagram"></i>
+            <input type="text" class="form-input" placeholder="e.g. Mobile Redesign" [(ngModel)]="newProject.name"
+              name="projectName" required>
+          </div>
+        </div>
+
+        <!-- Project Description -->
+        <div class="form-group form-group-full">
+          <label class="form-label">Project Description <span class="required">*</span></label>
+          <div class="input-with-icon">
+            <i class="fas fa-align-left icon-textarea"></i>
+            <textarea class="form-textarea" placeholder="What is this project about?"
+              [(ngModel)]="newProject.description" name="description" rows="3" required></textarea>
+          </div>
+        </div>
+
+        <!-- Client Phone Number -->
+        <div class="form-group">
+          <label class="form-label">Client Phone Number <span class="required">*</span></label>
+          <div class="input-with-icon">
+            <i class="fas fa-phone"></i>
+            <input type="tel" class="form-input" placeholder="+1 (234) 567-8900" [(ngModel)]="newProject.clientPhone"
+              name="clientPhone" pattern="[+]?[0-9\s\-\(\)]+" required>
+          </div>
+        </div>
+
+        <!-- Project Location -->
+        <div class="form-group">
+          <label class="form-label">Project Location <span class="required">*</span></label>
+          <div class="input-with-icon">
+            <i class="fas fa-map-marker-alt"></i>
+            <input type="text" class="form-input" placeholder="e.g. New York, USA" [(ngModel)]="newProject.location"
+              name="location" required>
+          </div>
+        </div>
+
+        <!-- Assign Employees -->
+        <div class="form-group form-group-full">
+          <label class="form-label">Assign Employees</label>
+          <div class="multi-select-dropdown">
+            <div class="selected-employees" *ngIf="newProject.assignedEmployees.length > 0">
+              <span *ngFor="let empId of newProject.assignedEmployees" class="selected-employee-chip">
+                {{ getEmployeeName(empId) }}
+                <i class="fas fa-times" (click)="toggleEmployee(empId)"></i>
+              </span>
+            </div>
+            <div class="employee-list">
+              <button *ngFor="let employee of employees" type="button" class="employee-option"
+                [class.selected]="isEmployeeSelected(employee.id)" (click)="toggleEmployee(employee.id)">
+                <div class="employee-avatar">{{ employee.initials }}</div>
+                <span>{{ employee.name }}</span>
+                <i *ngIf="isEmployeeSelected(employee.id)" class="fas fa-check"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Deadline -->
+        <div class="form-group">
+          <label class="form-label">Project Deadline <span class="required">*</span></label>
+          <div class="input-with-icon">
+            <i class="fas fa-calendar"></i>
+            <input type="date" class="form-input" [(ngModel)]="newProject.dueDate" name="dueDate" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateProjectModal()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-plus-circle"></i>
+          Create Project
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Project Details Modal -->
+<div class="modal-overlay details-modal" *ngIf="showProjectDetailsModal && selectedProject"
+  (click)="closeProjectDetails()">
+  <div class="modal-content details-content" (click)="$event.stopPropagation()">
+    <!-- Details Header -->
+    <div class="details-header">
+      <button class="back-btn" (click)="closeProjectDetails()" type="button">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2>{{ selectedProject.name }}</h2>
+    </div>
+
+    <!-- Project Info Card -->
+    <div class="project-info-card" [ngClass]="'project-card-' + selectedProject.color">
+      <div class="info-header">
+        <span class="status-badge" [ngClass]="getStatusClass(selectedProject.status)">
+          {{ getStatusLabel(selectedProject.status) }}
+        </span>
+        <span class="category-badge">{{ selectedProject.category }}</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <i class="fas fa-align-left"></i>
+          <div>
+            <span class="info-label">Description</span>
+            <span class="info-value">{{ selectedProject.description }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="fas fa-phone"></i>
+          <div>
+            <span class="info-label">Client Phone</span>
+            <span class="info-value">{{ selectedProject.clientPhone }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>
+            <span class="info-label">Location</span>
+            <span class="info-value">{{ selectedProject.location }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <i class="fas fa-calendar"></i>
+          <div>
+            <span class="info-label">Due Date</span>
+            <span class="info-value">{{ formatDate(selectedProject.dueDate) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-chips-container">
+        <div *ngFor="let user of selectedProject.assignedUsers" class="team-chip">
+          <div class="chip-avatar">{{ user.initials }}</div>
+          <span class="chip-name">{{ user.name }}</span>
+        </div>
+      </div>
+
+      <div class="info-progress">
+        <div class="progress-header">
+          <span>Project Progress</span>
+          <span class="progress-value">{{ selectedProject.progress }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="selectedProject.progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="details-tabs">
+      <button class="details-tab" [class.active]="activeDetailsTab === 'tasks'" (click)="setDetailsTab('tasks')"
+        type="button">
+        <i class="fas fa-tasks"></i>
+        Tasks
+      </button>
+      <button class="details-tab" [class.active]="activeDetailsTab === 'review'" (click)="setDetailsTab('review')"
+        type="button">
+        <i class="fas fa-clipboard-check"></i>
+        Review
+      </button>
+      <button class="details-tab" [class.active]="activeDetailsTab === 'requests'" (click)="setDetailsTab('requests')"
+        type="button">
+        <i class="fas fa-hand-paper"></i>
+        Requests
+      </button>
+      <button class="details-tab" [class.active]="activeDetailsTab === 'team'" (click)="setDetailsTab('team')"
+        type="button">
+        <i class="fas fa-users"></i>
+        Team
+      </button>
+    </div>
+
+    <!-- Tasks Tab -->
+    <div class="tasks-list" *ngIf="activeDetailsTab === 'tasks'">
+      <div *ngFor="let task of selectedProject.tasks" class="task-item">
+        <div class="task-header">
+          <span class="priority-badge" [ngClass]="getPriorityClass(task.priority)">
+            {{ task.priority }}
+          </span>
+        </div>
+
+        <h4 class="task-name">{{ task.name }}</h4>
+        <p class="task-description">{{ task.description }}</p>
+
+        <div class="task-footer">
+          <div class="task-assignee">
+            <i class="fas fa-user"></i>
+            <span>{{ task.assignedTo }}</span>
+          </div>
+          <div class="task-due">
+            <i class="fas fa-clock"></i>
+            <span>{{ getDaysLeft(task.dueDate) }} Days left</span>
+          </div>
+        </div>
+
+        <div class="task-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="task.progress"></div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="selectedProject.tasks.length === 0" class="empty-state">
+        <i class="fas fa-tasks empty-icon-inline"></i>
+        <p>No tasks yet</p>
+        <span>Create your first task to get started</span>
+      </div>
+    </div>
+
+    <!-- Review Tab -->
+    <div class="tab-content" *ngIf="activeDetailsTab === 'review'">
+      <div class="empty-state">
+        <i class="fas fa-clipboard-check empty-icon-inline"></i>
+        <p>No reviews yet</p>
+        <span>Reviews and feedback will appear here</span>
+      </div>
+    </div>
+
+    <!-- Requests Tab -->
+    <div class="tab-content" *ngIf="activeDetailsTab === 'requests'">
+      <div class="empty-state">
+        <i class="fas fa-hand-paper empty-icon-inline"></i>
+        <p>No requests</p>
+        <span>Project requests will appear here</span>
+      </div>
+    </div>
+
+    <!-- Team Tab -->
+    <div class="tab-content team-content" *ngIf="activeDetailsTab === 'team'">
+      <div class="team-grid">
+        <div *ngFor="let member of selectedProject.assignedUsers" class="team-member-card">
+          <div class="team-member-avatar-large">
+            {{ member.initials }}
+          </div>
+          <div class="team-member-info">
+            <h4 class="team-member-name">{{ member.name }}</h4>
+            <p class="team-member-role">Team Member</p>
+          </div>
+          <div class="team-member-stats">
+            <div class="stat-item-inline">
+              <span class="stat-label">Tasks</span>
+              <span class="stat-value">{{ getTaskCountForMember(member.name) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="selectedProject.assignedUsers.length === 0" class="empty-state">
+        <i class="fas fa-users empty-icon-inline"></i>
+        <p>No team members</p>
+        <span>Assign team members to this project</span>
+      </div>
+    </div>
+
+    <!-- Add Task FAB -->
+    <button class="fab-task" (click)="openCreateTaskModal()" *ngIf="activeDetailsTab === 'tasks'" type="button">
+      <i class="fas fa-plus"></i>
+      <span>Add Task</span>
+    </button>
+  </div>
+</div>
+
+<!-- Create Task Modal -->
+<div class="modal-overlay" *ngIf="showCreateTaskModal" (click)="closeCreateTaskModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create New Task</h2>
+      <p class="modal-subtitle">Enter the details of your upcoming task</p>
+    </div>
+
+    <form class="modal-form" (submit)="$event.preventDefault(); createTask()">
+      <!-- Task Name -->
+      <div class="form-group">
+        <label class="form-label">Task Name <span class="required">*</span></label>
+        <div class="input-with-icon">
+          <i class="fas fa-tasks"></i>
+          <input type="text" class="form-input" placeholder="Enter task name" [(ngModel)]="newTask.name" name="taskName"
+            required>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label">Task Description <span class="required">*</span></label>
+        <div class="input-with-icon">
+          <i class="fas fa-align-left icon-textarea"></i>
+          <textarea class="form-textarea" placeholder="Describe the task..." [(ngModel)]="newTask.description"
+            name="taskDescription" rows="3" required></textarea>
+        </div>
+      </div>
+
+      <!-- Assign To -->
+      <div class="form-group">
+        <label class="form-label">Assign To <span class="required">*</span></label>
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <select class="form-select" [(ngModel)]="newTask.assignedTo" name="assignedTo" required>
+            <option value="">Select team member</option>
+            <option *ngFor="let employee of employees" [value]="employee.name">
+              {{ employee.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Due Date -->
+      <div class="form-group">
+        <label class="form-label">Task Deadline <span class="required">*</span></label>
+        <div class="input-with-icon">
+          <i class="fas fa-calendar"></i>
+          <input type="date" class="form-input" [(ngModel)]="newTask.dueDate" name="taskDueDate" required>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateTaskModal()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-check-circle"></i>
+          Create Task
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<app-manager-sidebar></app-manager-sidebar>
+
+<div class="main-content">
+  <div class="dashboard-container">
+
+
+    <!-- Summary Cards Section -->
+    <div class="summary-cards-section">
+      <div class="summary-cards-grid">
+        <div class="summary-card" *ngFor="let card of summaryCards" [style.background]="card.bgColor"
+          (click)="onCardClick(card.route)" role="button" tabindex="0" [attr.aria-label]="'Navigate to ' + card.title">
+          <div class="card-content">
+            <div class="card-icon" [style.background]="card.iconBg">
+              <i class="fas" [ngClass]="card.icon" [style.color]="card.accentColor"></i>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">{{ card.title }}</h3>
+              <p class="card-value" [style.color]="card.accentColor">{{ card.value }}</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-trend" [ngClass]="getTrendClass(card.trendDirection)">
+              <i class="fas" [ngClass]="getTrendIcon(card.trendDirection)"></i>
+              <span>{{ card.trend }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="quick-actions-section">
+      <h3 class="section-title">Quick Actions</h3>
+      <div class="actions-grid">
+        <button class="action-btn primary" (click)="onCardClick('/manager/projects')">
+          <i class="fas fa-plus"></i>
+          <span>Create Project</span>
+        </button>
+
+        <button class="action-btn secondary" (click)="onCardClick('/manager/team')">
+          <i class="fas fa-user-plus"></i>
+          <span>Add Team Member</span>
+        </button>
+
+        <button class="action-btn tertiary" (click)="onCardClick('/manager/projects')">
+          <i class="fas fa-file-alt"></i>
+          <span>Generate Report</span>
+        </button>
+
+
+      </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="notifications-section">
+      <div class="notifications-container">
+        <div class="notifications-header">
+          <div class="header-left">
+            <i class="fas fa-history header-icon"></i>
+            <h2 class="section-title">Recent Activity</h2>
+          </div>
+          <button class="refresh-btn" (click)="refreshDashboard()" title="Refresh">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+
+        <div class="notifications-list">
+          <div class="notification-item" *ngFor="let activity of recentActivities" (click)="onActivityClick(activity)">
+            <div class="notification-indicator" [style.background]="activity.color"></div>
+            <div class="notification-icon" [ngClass]="getActivityIconClass(activity.type)"
+              [style.background]="activity.color + '20'" [style.border-color]="activity.color + '30'">
+              <i class="fas" [ngClass]="activity.icon" [style.color]="activity.color"></i>
+            </div>
+            <div class="notification-content">
+              <p class="notification-message">{{ activity.title }}</p>
+              <span class="notification-timestamp">
+                <i class="far fa-clock"></i>
+                {{ activity.timestamp }}
+              </span>
+            </div>
+            <button class="notification-action" title="View details">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="notifications-footer">
+          <a (click)="onCardClick('/manager/projects')" class="view-all-link" style="cursor: pointer;">
+            View all activities
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -33,7 +33,14 @@ export class LoginComponent {
     { value: 'employee', label: 'Employee', icon: '👤' }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
+
+  // ADD THIS METHOD - it was missing
+  selectRole(role: string): void {
+    if (!this.isLoading) {
+      this.selectedRole = role;
+    }
+  }
 
   onSubmit(): void {
     // Reset error state
@@ -97,11 +104,12 @@ export class LoginComponent {
         });
         break;
       case 'manager':
-        // Navigate to manager dashboard (can be implemented later)
-        this.router.navigate(['/admin/dashboard']).then(success => {
+        // Navigate to manager dashboard
+        this.router.navigate(['/manager/dashboard']).then(success => {
           if (success) {
             console.log('Navigation to manager dashboard successful');
           } else {
+            console.error('Navigation to manager dashboard failed');
             this.handleNavigationError();
           }
         });

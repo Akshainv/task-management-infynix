@@ -23,7 +23,6 @@
     padding: 20px;
     background: linear-gradient(135deg, #EAF4FA 0%, #F0F7FC 50%, #E3F0F9 100%);
     position: relative;
-
 }
 
 .container::before {
@@ -52,6 +51,7 @@
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     z-index: 1;
+    margin: auto;
 }
 
 @keyframes fadeInUp {
@@ -59,7 +59,6 @@
         opacity: 0;
         transform: translateY(30px) scale(0.98);
     }
-
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -67,26 +66,9 @@
 }
 
 @keyframes shake {
-
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-        transform: translateX(-8px);
-    }
-
-    20%,
-    40%,
-    60%,
-    80% {
-        transform: translateX(8px);
-    }
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+    20%, 40%, 60%, 80% { transform: translateX(8px); }
 }
 
 .shake {
@@ -97,7 +79,7 @@
 .brand-section {
     flex: 0 0 320px;
     background: linear-gradient(135deg, #1E3A5F 0%, #2C7BE5 100%);
-    padding: 32px 28px;
+    padding: 28px 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,15 +149,8 @@
 }
 
 @keyframes floatShape {
-
-    0%,
-    100% {
-        transform: translateY(0px) rotate(15deg);
-    }
-
-    50% {
-        transform: translateY(-15px) rotate(15deg);
-    }
+    0%, 100% { transform: translateY(0px) rotate(15deg); }
+    50% { transform: translateY(-15px) rotate(15deg); }
 }
 
 .brand-content {
@@ -186,38 +161,31 @@
 }
 
 .logo-animated {
-    font-size: 64px;
-    margin-bottom: 16px;
+    font-size: 56px;
+    margin-bottom: 14px;
     display: inline-block;
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
     animation: gentlePulse 4s ease-in-out infinite;
 }
 
 @keyframes gentlePulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 .brand-title {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     letter-spacing: -0.5px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .brand-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     opacity: 0.95;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     letter-spacing: 0.3px;
 }
 
@@ -246,14 +214,11 @@
 }
 
 @keyframes dotPulse {
-
-    0%,
-    100% {
+    0%, 100% { 
         opacity: 0.4;
         transform: scale(1);
     }
-
-    50% {
+    50% { 
         opacity: 1;
         transform: scale(1.2);
     }
@@ -262,32 +227,32 @@
 /* =============== FORM SECTION =============== */
 .form-section {
     flex: 1;
-    padding: 32px 36px;
+    padding: 28px 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #FFFFFF;
+    background: #F8FBFE;
 }
 
 .form-container {
     width: 100%;
-    max-width: 340px;
+    max-width: 320px;
 }
 
 .form-header {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .form-title {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     color: #1F2933;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     letter-spacing: -0.5px;
 }
 
 .form-subtitle {
-    font-size: 13px;
+    font-size: 12px;
     color: #6B7280;
     font-weight: 400;
 }
@@ -296,13 +261,13 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
 }
 
 .form-group label {
@@ -328,15 +293,9 @@
     z-index: 1;
 }
 
-.role-icon {
-    font-size: 16px;
-    left: 13px;
-}
-
-.form-group input,
-.form-group select {
+.form-group input {
     width: 100%;
-    padding: 12px 14px 12px 42px;
+    padding: 11px 12px 11px 40px;
     font-size: 13px;
     border: 1.5px solid #DCE3EA;
     border-radius: 10px;
@@ -353,44 +312,113 @@
     font-weight: 400;
 }
 
-/* Role Select Dropdown */
-.role-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+/* =============== COMPACT ROLE CARDS =============== */
+.role-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.role-card {
+    background: #FFFFFF;
+    border: 1.5px solid #DCE3EA;
+    border-radius: 8px;
+    padding: 8px 6px;
     cursor: pointer;
-    padding-right: 36px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
 }
 
-.dropdown-icon {
+.role-card::before {
+    content: '';
     position: absolute;
-    right: 14px;
-    color: #6B7280;
-    font-size: 11px;
-    pointer-events: none;
-    transition: all 0.3s ease;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(44, 123, 229, 0.04) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
 }
 
-.form-group input:hover,
-.form-group select:hover {
+.role-card:hover:not(.disabled) {
+    border-color: #2C7BE5;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(44, 123, 229, 0.12);
+}
+
+.role-card:hover:not(.disabled)::before {
+    opacity: 1;
+}
+
+.role-card.selected {
+    border-color: #F36A21;
+    background: linear-gradient(135deg, rgba(243, 106, 33, 0.06) 0%, rgba(255, 140, 66, 0.03) 100%);
+    box-shadow: 0 2px 8px rgba(243, 106, 33, 0.15);
+}
+
+.role-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    background: #F36A21;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.role-card.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.role-card-icon {
+    font-size: 18px;
+    color: #2C7BE5;
+    transition: all 0.25s ease;
+}
+
+.role-card.selected .role-card-icon {
+    color: #F36A21;
+    transform: scale(1.08);
+}
+
+.role-card-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1F2933;
+    text-align: center;
+    letter-spacing: 0.2px;
+}
+
+.form-group input:hover {
     border-color: #2C7BE5;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.form-group input:focus {
     border-color: #F36A21;
     background: #FFFFFF;
     box-shadow: 0 0 0 3px rgba(243, 106, 33, 0.08);
 }
 
-.form-group input:focus~.input-icon,
-.form-group select:focus~.input-icon,
-.form-group select:focus~.dropdown-icon {
+.form-group input:focus~.input-icon {
     color: #F36A21;
 }
 
-.form-group input:disabled,
-.form-group select:disabled {
+.form-group input:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     background: #F9FAFB;
@@ -399,8 +427,8 @@
 /* =============== LOGIN BUTTON =============== */
 .login-btn {
     width: 100%;
-    padding: 11px 20px;
-    font-size: 14px;
+    padding: 10px 18px;
+    font-size: 13px;
     font-weight: 600;
     color: white;
     background: linear-gradient(135deg, #F36A21 0%, #FF8C42 100%);
@@ -408,7 +436,7 @@
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: 6px;
+    margin-top: 4px;
     box-shadow: 0 3px 12px rgba(243, 106, 33, 0.3);
     display: flex;
     align-items: center;
@@ -460,9 +488,7 @@
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 /* =============== ERROR MESSAGE =============== */
@@ -491,7 +517,6 @@
         opacity: 0;
         transform: translateY(-10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -539,5 +564,21 @@
 
     .form-container {
         max-width: 100%;
+    }
+    
+    .role-cards {
+        gap: 5px;
+    }
+    
+    .role-card {
+        padding: 7px 5px;
+    }
+    
+    .role-card-icon {
+        font-size: 16px;
+    }
+    
+    .role-card-label {
+        font-size: 10px;
     }
 }

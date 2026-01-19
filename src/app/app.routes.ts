@@ -10,6 +10,11 @@ import { EmployeeDashboardComponent } from './employee-dashboard/employee-dashbo
 import { EmployeeMyTasksComponent } from './employee-my-tasks/employee-my-tasks';
 import { EmployeeCompletedProjectsComponent } from './employee-completed-projects/employee-completed-projects';
 import { EmployeeNotificationsComponent } from './employee-notifications/employee-notifications';
+import { ManagerSidebarComponent } from './manager-sidebar/manager-sidebar';
+import { ManagerDashboardComponent } from './manager-dashboard/manager-dashboard';
+import { ManagerRequestServiceComponent } from './manager-request-service/manager-request-service';
+import { ManagerTeamComponent } from './manager-team/manager-team';
+import { ManagerProjectsComponent } from './manager-projects/manager-projects';
 
 export const routes: Routes = [
   {
@@ -21,6 +26,7 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent
   },
+  // Admin Routes
   {
     path: 'admin/dashboard',
     component: AdminDashboardComponent
@@ -41,6 +47,37 @@ export const routes: Routes = [
     path: 'admin/notifications',
     component: AdminServiceRequestsComponent
   },
+  // Manager Routes
+  {
+    path: 'manager',
+    redirectTo: '/manager/dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: 'manager/dashboard',
+    component: ManagerDashboardComponent
+  },
+  {
+    path: 'manager/projects',
+    component: ManagerProjectsComponent
+  },
+  {
+    path: 'manager/team',
+    component: ManagerTeamComponent
+  },
+  {
+    path: 'manager/request-service',
+    component: ManagerRequestServiceComponent
+  },
+  {
+    path: 'manager/notifications',
+    component: ManagerSidebarComponent
+  },
+  // Employee Routes
+  {
+    path: 'employee',
+    component: EmployeeSidebarComponent
+  },
   {
     path: 'employee/dashboard',
     component: EmployeeDashboardComponent
@@ -56,10 +93,6 @@ export const routes: Routes = [
   {
     path: 'employee/notifications',
     component: EmployeeNotificationsComponent
-  },
-  {
-    path: 'employee',
-    component: EmployeeSidebarComponent
   },
   {
     path: '**',

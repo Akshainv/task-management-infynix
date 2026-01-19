@@ -61,23 +61,36 @@
             </div>
           </div>
 
-          <!-- Role Selection Dropdown -->
+          <!-- Role Selection Cards -->
           <div class="form-group">
-            <label for="role">Select Role</label>
-            <div class="input-wrapper">
-              <span class="input-icon role-icon">{{ getSelectedRoleIcon() }}</span>
-              <select 
-                id="role"
-                name="role"
-                class="role-select"
-                [(ngModel)]="selectedRole"
-                [disabled]="isLoading"
-                required>
-                <option *ngFor="let role of roles" [value]="role.value">
-                  {{ role.label }}
-                </option>
-              </select>
-              <i class="fas fa-chevron-down dropdown-icon"></i>
+            <label>Select Role</label>
+            <div class="role-cards">
+              <div 
+                class="role-card"
+                [class.selected]="selectedRole === 'admin'"
+                (click)="selectRole('admin')"
+                [class.disabled]="isLoading">
+                <i class="fas fa-user-shield role-card-icon"></i>
+                <span class="role-card-label">Admin</span>
+              </div>
+              
+              <div 
+                class="role-card"
+                [class.selected]="selectedRole === 'manager'"
+                (click)="selectRole('manager')"
+                [class.disabled]="isLoading">
+                <i class="fas fa-user-tie role-card-icon"></i>
+                <span class="role-card-label">Manager</span>
+              </div>
+              
+              <div 
+                class="role-card"
+                [class.selected]="selectedRole === 'employee'"
+                (click)="selectRole('employee')"
+                [class.disabled]="isLoading">
+                <i class="fas fa-user role-card-icon"></i>
+                <span class="role-card-label">Employee</span>
+              </div>
             </div>
           </div>
 

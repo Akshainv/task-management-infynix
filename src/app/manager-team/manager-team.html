@@ -1,0 +1,352 @@
+<!-- team-overview.html -->
+<app-manager-sidebar></app-manager-sidebar>
+<div class="main-content">
+  <div class="team-overview-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-title-section">
+          <div class="title-wrapper">
+            <i class="fas fa-users header-icon"></i>
+            <div>
+              <h1 class="page-title">Team Members</h1>
+              <p class="page-subtitle">Manage your team and their assignments</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Stats Card - Total Members -->
+        <div class="stats-card-single">
+          <div class="stat-item">
+            <div class="stat-icon-wrapper total">
+              <i class="fas fa-user-friends"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-label">Total Members</span>
+              <span class="stat-value">{{ teamMembers.length }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search by name, email, or role..."
+          [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()">
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="filter-container">
+        <button class="filter-btn" [class.active]="selectedFilter === 'all'" (click)="onFilterChange('all')"
+          type="button">
+          <i class="fas fa-th"></i>
+          All Members
+        </button>
+        <button class="filter-btn" [class.active]="selectedFilter === 'active'" (click)="onFilterChange('active')"
+          type="button">
+          <i class="fas fa-check-circle"></i>
+          Active
+        </button>
+        <button class="filter-btn" [class.active]="selectedFilter === 'inactive'" (click)="onFilterChange('inactive')"
+          type="button">
+          <i class="fas fa-times-circle"></i>
+          Inactive
+        </button>
+        <button class="filter-btn" [class.active]="selectedFilter === 'on-leave'" (click)="onFilterChange('on-leave')"
+          type="button">
+          <i class="fas fa-clock"></i>
+          On Leave
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loader"></div>
+      <p>Loading team members...</p>
+    </div>
+
+    <!-- Team Members Grid -->
+    <div *ngIf="!isLoading && paginatedMembers.length > 0" class="team-grid">
+      <div *ngFor="let member of paginatedMembers" class="team-card" [ngClass]="'team-card-' + member.colorTheme">
+
+        <!-- Card Header with Avatar -->
+        <div class="card-header">
+          <div class="member-avatar-large">
+            <span class="avatar-initials">{{ member.initials }}</span>
+          </div>
+          <button class="card-menu-btn" (click)="openEditMemberModal(member)" type="button">
+            <i class="fas fa-edit"></i>
+          </button>
+        </div>
+
+        <!-- Member Info -->
+        <div class="member-info">
+          <h2 class="member-name">{{ member.name }}</h2>
+          <p class="member-role">{{ member.role }}</p>
+          <p class="member-email">
+            <i class="fas fa-envelope"></i>
+            {{ member.email }}
+          </p>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="status-section">
+          <span class="status-badge" [ngClass]="getStatusClass(member.status)">
+            {{ member.status }}
+          </span>
+        </div>
+
+        <!-- Department and Contact -->
+        <div class="details-section">
+          <div class="detail-item">
+            <i class="fas fa-building"></i>
+            <span>{{ member.department }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-phone"></i>
+            <span>{{ member.contactNumber }}</span>
+          </div>
+        </div>
+
+        <!-- Tasks Progress -->
+        <div class="progress-section">
+          <div class="progress-header">
+            <span class="progress-label">Task Completion</span>
+            <span class="progress-percentage">{{ getCompletionPercentage(member) }}%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar progress-active" [style.width.%]="getCompletionPercentage(member)">
+            </div>
+          </div>
+          <div class="task-stats">
+            <span>{{ member.tasksCompleted }}/{{ member.tasksAssigned }} tasks</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-actions">
+          <button class="action-btn delete-btn" (click)="deleteMember(member.id)" type="button">
+            <i class="fas fa-trash"></i>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && filteredMembers.length > 0" class="pagination-container">
+      <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1" type="button">
+        <i class="fas fa-chevron-left"></i>
+        Previous
+      </button>
+
+      <div class="page-numbers">
+        <button *ngFor="let page of getPageNumbers()" class="page-number-btn" [class.active]="page === currentPage"
+          (click)="goToPage(page)" type="button">
+          {{ page }}
+        </button>
+      </div>
+
+      <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages" type="button">
+        Next
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredMembers.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <h2 class="empty-title">No team members found</h2>
+      <p class="empty-description">{{ searchQuery ? 'Try adjusting your search or filters' : 'Add your first team member
+        to get started' }}</p>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button class="fab" (click)="openAddMemberModal()" type="button">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Add Member Modal -->
+<div class="modal-overlay" *ngIf="showAddMemberModal" (click)="closeAddMemberModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Add New Team Member</h2>
+      <p class="modal-subtitle">Enter the details of the new team member</p>
+    </div>
+
+    <form class="modal-form" (submit)="$event.preventDefault(); addMember()">
+      <!-- Full Name -->
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" class="form-input" placeholder="Enter full name" [(ngModel)]="newMember.name"
+            name="memberName" required>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-with-icon">
+          <i class="fas fa-envelope"></i>
+          <input type="email" class="form-input" placeholder="email@company.com" [(ngModel)]="newMember.email"
+            name="memberEmail" required>
+        </div>
+      </div>
+
+      <!-- Contact Number -->
+      <div class="form-group">
+        <label class="form-label">Contact Number</label>
+        <div class="input-with-icon">
+          <i class="fas fa-phone"></i>
+          <input type="tel" class="form-input" placeholder="+1 234 567 8900" [(ngModel)]="newMember.contactNumber"
+            name="memberContact" required>
+        </div>
+      </div>
+
+      <!-- Role -->
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <div class="input-with-icon">
+          <i class="fas fa-briefcase"></i>
+          <select class="form-select" [(ngModel)]="newMember.role" name="memberRole">
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Department -->
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <div class="input-with-icon">
+          <i class="fas fa-building"></i>
+          <select class="form-select" [(ngModel)]="newMember.department" name="memberDepartment">
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Color Theme -->
+      <div class="form-group">
+        <label class="form-label">Card Color Theme</label>
+        <div class="color-chips">
+          <button *ngFor="let color of colorThemes" type="button" class="color-chip" [ngClass]="'color-' + color"
+            [class.active]="newMember.colorTheme === color" (click)="newMember.colorTheme = color">
+            <i *ngIf="newMember.colorTheme === color" class="fas fa-check"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeAddMemberModal()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          Add Member
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Member Modal -->
+<div class="modal-overlay" *ngIf="showEditMemberModal && selectedMember" (click)="closeEditMemberModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Edit Team Member</h2>
+      <p class="modal-subtitle">Update the member's details</p>
+    </div>
+
+    <form class="modal-form" (submit)="$event.preventDefault(); updateMember()">
+      <!-- Full Name -->
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" class="form-input" [(ngModel)]="selectedMember.name" name="editMemberName" required>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-with-icon">
+          <i class="fas fa-envelope"></i>
+          <input type="email" class="form-input" [(ngModel)]="selectedMember.email" name="editMemberEmail" required>
+        </div>
+      </div>
+
+      <!-- Contact Number -->
+      <div class="form-group">
+        <label class="form-label">Contact Number</label>
+        <div class="input-with-icon">
+          <i class="fas fa-phone"></i>
+          <input type="tel" class="form-input" [(ngModel)]="selectedMember.contactNumber" name="editMemberContact"
+            required>
+        </div>
+      </div>
+
+      <!-- Role -->
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <div class="input-with-icon">
+          <i class="fas fa-briefcase"></i>
+          <select class="form-select" [(ngModel)]="selectedMember.role" name="editMemberRole">
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Department -->
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <div class="input-with-icon">
+          <i class="fas fa-building"></i>
+          <select class="form-select" [(ngModel)]="selectedMember.department" name="editMemberDepartment">
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <div class="status-chips">
+          <button type="button" class="status-chip" [class.active]="selectedMember.status === 'Active'"
+            (click)="selectedMember.status = 'Active'">
+            <i class="fas fa-check-circle"></i>
+            Active
+          </button>
+          <button type="button" class="status-chip" [class.active]="selectedMember.status === 'Inactive'"
+            (click)="selectedMember.status = 'Inactive'">
+            <i class="fas fa-times-circle"></i>
+            Inactive
+          </button>
+          <button type="button" class="status-chip" [class.active]="selectedMember.status === 'On Leave'"
+            (click)="selectedMember.status = 'On Leave'">
+            <i class="fas fa-clock"></i>
+            On Leave
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeEditMemberModal()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          Update Member
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
