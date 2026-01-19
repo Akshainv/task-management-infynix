@@ -67,17 +67,6 @@ export class ManagerDashboardComponent implements OnInit {
       route: '/manager/projects',
       trend: '3% from last week',
       trendDirection: 'down'
-    },
-    {
-      title: 'Team Members',
-      value: 48,
-      icon: 'fa-users',
-      bgColor: 'linear-gradient(135deg, #E9D5FF 0%, #D8B4FE 100%)',
-      accentColor: '#8B5CF6',
-      iconBg: 'rgba(139, 92, 246, 0.15)',
-      route: '/manager/team',
-      trend: 'No change',
-      trendDirection: 'neutral'
     }
   ];
 
